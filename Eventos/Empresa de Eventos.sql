@@ -1,0 +1,1 @@
+SELECT * FROM cdc_3b_grupo9.eventos;
