@@ -1,6 +1,8 @@
 <?php
 session_start();
-require 'conexao.php';
+
+require __DIR__ . '/conexao.php';
+
 if (isset($_POST['create_usuario'])) {
 	$nome = mysqli_real_escape_string($conexao, trim($_POST['nome']));
 	$email = mysqli_real_escape_string($conexao, trim($_POST['email']));

@@ -5,7 +5,9 @@ session_start();
   exit;
 }
 */
-require 'conexao.php';
+
+require __DIR__ . '/conexao.php';
+
 ?>
 <!doctype html>
 <html lang="pt-br">

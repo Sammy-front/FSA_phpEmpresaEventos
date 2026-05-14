@@ -4,7 +4,9 @@ if (!isset($_SESSION['usuario'])) {
   header('Location: login.php');
   exit;
 }
-require 'conexao.php';
+
+require __DIR__ . '/conexao.php';
+
 ?>
 <!doctype html>
 <html lang="en">

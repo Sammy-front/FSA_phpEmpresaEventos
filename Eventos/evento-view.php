@@ -1,6 +1,9 @@
 <?php
 session_start();
-require 'conexao.php';
+
+require __DIR__ . '/conexao.php';
+
+
 if (!isset($_SESSION['usuario'])) {
   header('Location: login.php');
   exit;

@@ -1,6 +1,7 @@
 <?php
 session_start();
-require 'conexao.php'; // Conectar ao banco
+
+require __DIR__ . '/conexao.php'; // Conectar ao banco
 
 if (isset($_POST['login_usuario'])) {
     // Sanitize e escape as variáveis para evitar SQL Injection
