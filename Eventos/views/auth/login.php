@@ -21,7 +21,7 @@ if (isset($_POST['login_usuario'])) {
             // Senha correta, criar a sessão
             $_SESSION['usuario'] = $usuarioDB['email'];
             $_SESSION['nome'] = $usuarioDB['nome'];
-            header('Location: index.php');
+            header('Location: ../../public/index.php');
             exit;
         } else {
             // Senha incorreta
@@ -63,7 +63,7 @@ if (isset($_POST['login_usuario'])) {
 
         <hr>
         <p>Não possui uma conta?</p>
-        <a href="usuario-create.php">Cadastre-se aqui</a>
+        <a href="../auth/register.php">Cadastre-se aqui</a>
         <hr>
 
         <button type="submit" name="login_usuario">Entrar</button>

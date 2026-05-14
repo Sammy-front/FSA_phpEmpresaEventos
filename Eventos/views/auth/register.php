@@ -10,22 +10,22 @@ session_start();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   </head>
   <body>
-    <?php include('navbar.php'); ?>
+    <?php include('../layouts/navbar.php'); ?>
     <div class="container mt-5">
       
-      <?php include('mensagem.php'); // Exibe avisos caso haja ?>
+      <?php include('../layouts/mensagem.php'); // Exibe avisos caso haja ?>
       
       <div class="row justify-content-center">
         <div class="col-md-8">
           <div class="card">
             <div class="card-header">
               <h4>Cadastro de Usuário
-                <a href="login.php" class="btn btn-danger float-end">Voltar para o Login</a>
+                <a href="../auth/login.php" class="btn btn-danger float-end">Voltar para o Login</a>
               </h4>
             </div>
             <div class="card-body">
               <!-- Aqui o formulário aponta para o acoes.php -->
-              <form action="acoes.php" method="POST">
+              <form action="../controllers/acoes.php" method="POST">
                 
                 <div class="mb-3">
                   <label>Nome Completo</label>

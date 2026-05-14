@@ -17,14 +17,14 @@ require __DIR__ . '../../../config/conexao.php';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   </head>
   <body>
-    <?php include('navbar.php'); ?>
+    <?php include('../layouts/navbar.php'); ?>
     <div class="container mt-5">
       <div class="row">
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
               <h4>Editar usuário
-                <a href="index.php" class="btn btn-danger float-end">Voltar</a>
+                <a href="../../public/index.php" class="btn btn-danger float-end">Voltar</a>
               </h4>
             </div>
             <div class="card-body">
@@ -36,7 +36,7 @@ require __DIR__ . '../../../config/conexao.php';
                 if (mysqli_num_rows($query) > 0) {
                   $usuario = mysqli_fetch_array($query);
               ?>
-              <form action="acoes.php" method="POST">
+              <form action="../../controllers/acoes.php" method="POST">
                 <input type="hidden" name="usuario_id" value="<?=$usuario['id']?>">
                 <div class="mb-3">
                   <label>Nome</label>

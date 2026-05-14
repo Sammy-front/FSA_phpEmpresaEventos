@@ -1,7 +1,7 @@
 <?php
 session_start();
 /*if (!isset($_SESSION['usuario'])) {
-  header('Location: login.php');
+  header('Location: /login.php');
   exit;
 }
 */
@@ -19,15 +19,15 @@ require __DIR__ . '../../config/conexao.php';
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   </head>
   <body>
-    <?php include('navbar.php'); ?>
+    <?php include('../views/layouts/navbar.php'); ?>
     <div class="container mt-4">
-      <?php include('mensagem.php'); ?>
+      <?php include('../views/layouts/mensagem.php'); ?>
       <div class="row">
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
               <h4> Lista de Eventos
-                <a href="evento-create.php" class="btn btn-primary float-end">Adicionar evento</a>
+                <a href="../views/eventos/evento-create.php" class="btn btn-primary float-end">Adicionar evento</a>
               </h4>
             </div>
             <div class="card-body">
@@ -54,9 +54,9 @@ require __DIR__ . '../../config/conexao.php';
                     <td><?=date('d/m/Y', strtotime($evento['data_evento']))?></td>
                     <td><?=$evento['capacidade']?></td>
                     <td>
-                      <a href="evento-view.php?id=<?=$evento['id']?>" class="btn btn-secondary btn-sm"><span class="bi-eye-fill"></span>&nbsp;Visualizar</a>
-                      <a href="evento-edit.php?id=<?=$evento['id']?>" class="btn btn-success btn-sm"><span class="bi-pencil-fill"></span>&nbsp;Editar</a>
-                      <form action="acoes.php" method="POST" class="d-inline">
+                      <a href="../views/eventos/evento-view.php?id=<?=$evento['id']?>" class="btn btn-secondary btn-sm"><span class="bi-eye-fill"></span>&nbsp;Visualizar</a>
+                      <a href="../views/eventos/evento-edit.php?id=<?=$evento['id']?>" class="btn btn-success btn-sm"><span class="bi-pencil-fill"></span>&nbsp;Editar</a>
+                      <form action="../controllers/acoes.php" method="POST" class="d-inline">
                         <button onclick="return confirm('Tem certeza que deseja excluir?')" type="submit" name="delete_evento" value="<?=$evento['id']?>" class="btn btn-danger btn-sm">
                           <span class="bi-trash3-fill"></span>&nbsp;Excluir
                         </button>
@@ -70,7 +70,7 @@ require __DIR__ . '../../config/conexao.php';
                  }
                  ?>
                 </tbody>
-              </table><a href='logout.php'>Sair </a>
+              </table><a href='../logout.php'>Sair </a>
             </div>
           </div>
         </div>
