@@ -15,7 +15,7 @@ if (isset($_POST['login_usuario'])) {
     if ($resultado && mysqli_num_rows($resultado) > 0) {
         // Buscar os dados do usuário
         $usuarioDB = mysqli_fetch_assoc($resultado);
-        
+
         // Verificar se a senha informada corresponde ao hash armazenado
         if (password_verify($senha, $usuarioDB['senha'])) {
             // Senha correta, criar a sessão
@@ -40,10 +40,12 @@ if (isset($_POST['login_usuario'])) {
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
 </head>
+
 <body>
     <h2>Login</h2>
 
@@ -59,8 +61,14 @@ if (isset($_POST['login_usuario'])) {
         <label for="senha">Senha:</label><br>
         <input type="password" id="senha" name="senha" required><br><br>
 
+        <hr>
+        <p>Não possui uma conta?</p>
+        <a href="usuario-create.php">Cadastre-se aqui</a>
+        <hr>
+
         <button type="submit" name="login_usuario">Entrar</button>
     </form>
 
 </body>
+
 </html>
