@@ -25,7 +25,7 @@ session_start();
             </div>
             <div class="card-body">
               <!-- Aqui o formulário aponta para o acoes.php -->
-              <form action="../controllers/acoes.php" method="POST">
+              <form action="../../controllers/acoes.php" method="POST">
                 
                 <div class="mb-3">
                   <label>Nome Completo</label>
