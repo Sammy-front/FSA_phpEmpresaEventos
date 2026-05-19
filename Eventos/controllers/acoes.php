@@ -4,7 +4,9 @@
 session_start();
 
 require __DIR__ . '../../config/conexao.php';
+// ele só fez o do usuario. está faltando todo o resto.
 
+// Criar usuario
 if (isset($_POST['create_usuario'])) {
 	$nome = mysqli_real_escape_string($conexao, trim($_POST['nome']));
 	$email = mysqli_real_escape_string($conexao, trim($_POST['email']));
@@ -22,6 +24,8 @@ if (isset($_POST['create_usuario'])) {
 		exit;
 	}
 }
+
+// Update do usuario.
 if (isset($_POST['update_usuario'])) {
 	$usuario_id = mysqli_real_escape_string($conexao, $_POST['usuario_id']);
 	$nome = mysqli_real_escape_string($conexao, trim($_POST['nome']));
@@ -34,6 +38,8 @@ if (isset($_POST['update_usuario'])) {
 	}
 	$sql .= " WHERE id = '$usuario_id'";
 	mysqli_query($conexao, $sql);
+
+	// confirmação da atualização
 	if (mysqli_affected_rows($conexao) > 0) {
 		$_SESSION['mensagem'] = 'Usuário atualizado com sucesso';
 		header('Location: ../public/index.php');
@@ -44,6 +50,9 @@ if (isset($_POST['update_usuario'])) {
 		exit;
 	}
 }
+
+
+// Delete Usuario
 if (isset($_POST['delete_usuario'])) {
 	$usuario_id = mysqli_real_escape_string($conexao, $_POST['delete_usuario']);
 	$sql = "DELETE FROM login WHERE id = '$usuario_id'";
