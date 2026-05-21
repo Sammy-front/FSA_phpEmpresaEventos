@@ -10,55 +10,65 @@ session_start();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   </head>
   <body>
-    <?php include('../layouts/navbar.php'); ?>
+
+    <?php include(__DIR__ . '/../layouts/navbar.php'); ?>
+
     <div class="container mt-5">
-      
-      <?php include('../layouts/mensagem.php'); // Exibe avisos caso haja ?>
-      
+
+      <?php include(__DIR__ . '/../layouts/mensagem.php'); ?>
+
       <div class="row justify-content-center">
         <div class="col-md-8">
           <div class="card">
             <div class="card-header">
-              <h4>Cadastro de Usuário
+              <h4>
+                Cadastro de Usuário
                 <a href="../auth/login.php" class="btn btn-danger float-end">Voltar para o Login</a>
               </h4>
             </div>
+
             <div class="card-body">
-              <!-- Aqui o formulário aponta para o usuarioController.php -->
-              <form action="../../controllers/usuarioController.php" method="POST">
-                
+
+              <form action="../../controllers/usuarioControllers.php" method="POST">
+
                 <div class="mb-3">
-                  <label>Nome Completo</label>
-                  <input type="text" name="nome" class="form-control" required>
+                  <label for="nome" class="form-label">Nome Completo</label>
+                  <input type="text" id="nome" name="nome" class="form-control" required>
                 </div>
-                
+
                 <div class="mb-3">
-                  <label>Email</label>
-                  <input type="email" name="email" class="form-control" required>
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" id="email" name="email" class="form-control" required>
                 </div>
-                
+
                 <div class="mb-3">
-                  <label>Data de Nascimento</label>
-                  <!-- Seu banco espera o padrão de data: -->
-                  <input type="date" name="data_nascimento" class="form-control" required>
+                  <label for="data_nascimento" class="form-label">Data de Nascimento</label>
+                  <input type="date" id="data_nascimento" name="data_nascimento" class="form-control" required>
                 </div>
-                
+
                 <div class="mb-3">
-                  <label>Senha</label>
-                  <input type="password" name="senha" class="form-control" required>
+                  <label for="senha" class="form-label">Senha</label>
+                  <input type="password" id="senha" name="senha" class="form-control" required>
                 </div>
-                
+
+
+                <!-- Botão com o NAME correto -->
                 <div class="mb-3">
-                  <!-- IMPORTANTE: o botão tem que se chamar create_usuario para bater com seu acoes.php -->
-                  <button type="submit" name="create_usuario" class="btn btn-primary">Cadastrar</button>
+                  <button type="submit" name="create_usuario" class="btn btn-primary w-100">
+                    Cadastrar
+                  </button>
                 </div>
 
               </form>
+
             </div>
+
           </div>
         </div>
       </div>
+
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
