@@ -11,8 +11,9 @@ if (isset($_POST['create_usuario'])) {
 	$email = mysqli_real_escape_string($conexao, trim($_POST['email']));
 	$data_nascimento = mysqli_real_escape_string($conexao, trim($_POST['data_nascimento']));
 	$senha = isset($_POST['senha']) ? mysqli_real_escape_string($conexao, password_hash(trim($_POST['senha']), PASSWORD_DEFAULT)) : '';
-	
-	$sql = "INSERT INTO usuarios (nome, email, data_nascimento, senha) VALUES ('$nome', '$email', '$data_nascimento', '$senha')";
+	$cargo = mysqli_real_escape_string($conexao, trim($_POST['cargo']));
+
+	$sql = "INSERT INTO usuarios (nome, email, data_nascimento, senha, cargo) VALUES ('$nome', '$email', '$data_nascimento', '$senha', '$cargo')";
 	
 	mysqli_query($conexao, $sql);
 
@@ -35,8 +36,9 @@ if (isset($_POST['update_usuario'])) {
 	$email = mysqli_real_escape_string($conexao, trim($_POST['email']));
 	$data_nascimento = mysqli_real_escape_string($conexao, trim($_POST['data_nascimento']));
 	$senha = mysqli_real_escape_string($conexao, trim($_POST['senha']));
-	
-	$sql = "UPDATE login SET nome = '$nome', email = '$email', data_nascimento = '$data_nascimento'";
+	$cargo = mysqli_real_escape_string($conexao, trim($_POST['cargo']));
+
+	$sql = "UPDATE login SET nome = '$nome', email = '$email', data_nascimento = '$data_nascimento', cargo = '$cargo'";
 	
 	if (!empty($senha)) {
 		$sql .= ", senha='" . password_hash($senha, PASSWORD_DEFAULT) . "'";

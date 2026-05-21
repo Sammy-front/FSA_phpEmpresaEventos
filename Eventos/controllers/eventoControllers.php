@@ -6,7 +6,10 @@ require __DIR__ . '/../config/conexao.php';
 if (isset($_POST['create_evento'])) {
     $nome        = mysqli_real_escape_string($conexao, trim($_POST['nome']));
     $data_evento = mysqli_real_escape_string($conexao, trim($_POST['data_evento']));
+    $horario = mysqli_real_escape_string($conexao, trim($_POST['horario']));
+    $localidade = mysqli_real_escape_string($conexao, trim($_POST['localidade']));
     $capacidade  = mysqli_real_escape_string($conexao, trim($_POST['capacidade']));
+    $status_evento = mysqli_real_escape_string($conexao, trim($_POST['status_evento']));
 
     $sql = "INSERT INTO eventos (nome, data_evento, capacidade) VALUES ('$nome', '$data_evento', '$capacidade')";
     mysqli_query($conexao, $sql);
