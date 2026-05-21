@@ -35,19 +35,21 @@ require __DIR__ . '/../config/conexao.php';
         <div class="col-md-12">
           <div class="card shadow-sm">
             <div class="card-header bg-dark text-white">
-              <h4 class="mb-0 pt-1 pb-1">Lista de Eventos
-                <a href="../views/eventos/evento-create.php" class="btn btn-primary float-end">Adicionar Evento</a>
-              </h4>
+              <h4 class="mb-0 pt-1 pb-1">Lista de Eventos disponiveis.</h4>
             </div>
+
+
             <div class="card-body">
               <table class="table table-bordered table-striped">
                 <thead>
                   <tr>
                     <th>ID</th>
                     <th>Nome</th>
+                    <th>Localização</th>
                     <th>Data Evento</th>
+                    <th>Horario do Evento</th>
                     <th>Capacidade</th>
-                    <th style="width: 250px;">Ações</th>
+                    <th>Status do Evento</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -61,17 +63,16 @@ require __DIR__ . '/../config/conexao.php';
                   <tr>
                     <td><?=$evento['id']?></td>
                     <td><?=$evento['nome']?></td>
+                    <td><?=$evento['localidade']?></td>
                     <td><?=date('d/m/Y', strtotime($evento['data_evento']))?></td>
+                    <td><?=date('H:i', strtotime($evento['horario']))?></td>
                     <td><?=$evento['capacidade']?> pessoas</td>
-                    <td>
-                      <a href="../views/eventos/evento-view.php?id=<?=$evento['id']?>" class="btn btn-secondary btn-sm"><span class="bi-eye-fill"></span>&nbsp;Ver</a>
-                      <a href="../views/eventos/evento-edit.php?id=<?=$evento['id']?>" class="btn btn-success btn-sm"><span class="bi-pencil-fill"></span>&nbsp;Editar</a>
-                      <form action="../controllers/eventoControllers.php" method="POST" class="d-inline">
-                        <button onclick="return confirm('Tem certeza que deseja excluir o evento <?=$evento['nome']?>?')" type="submit" name="delete_evento" value="<?=$evento['id']?>" class="btn btn-danger btn-sm">
-                          <span class="bi-trash3-fill"></span>&nbsp;Deletar
-                        </button>
-                      </form>
-                    </td>
+                    <td><?=$evento['status_evento']?></td>
+                    
+
+                    <!-- Fazer o botão de visualizar para poder se cadastrar. ( que vai levar para outra pagina ) -->
+                    <td>a</td>
+
                   </tr>
                   <?php
                     }
@@ -82,6 +83,8 @@ require __DIR__ . '/../config/conexao.php';
                 </tbody>
               </table>
             </div>
+
+
           </div>
         </div>
       </div>
