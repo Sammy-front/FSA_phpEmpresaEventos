@@ -4,7 +4,6 @@
 session_start();
 
 require __DIR__ . '../../config/conexao.php';
-// ele só fez o do usuario. está faltando todo o resto.
 
 // Criar usuario
 if (isset($_POST['create_usuario'])) {
@@ -12,8 +11,11 @@ if (isset($_POST['create_usuario'])) {
 	$email = mysqli_real_escape_string($conexao, trim($_POST['email']));
 	$data_nascimento = mysqli_real_escape_string($conexao, trim($_POST['data_nascimento']));
 	$senha = isset($_POST['senha']) ? mysqli_real_escape_string($conexao, password_hash(trim($_POST['senha']), PASSWORD_DEFAULT)) : '';
+	
 	$sql = "INSERT INTO login (nome, email, data_nascimento, senha) VALUES ('$nome', '$email', '$data_nascimento', '$senha')";
+	
 	mysqli_query($conexao, $sql);
+
 	if (mysqli_affected_rows($conexao) > 0) {
 		$_SESSION['mensagem'] = 'Usuário criado com sucesso';
 		header('Location: ../public/index.php');
@@ -27,16 +29,21 @@ if (isset($_POST['create_usuario'])) {
 
 // Update do usuario.
 if (isset($_POST['update_usuario'])) {
+
 	$usuario_id = mysqli_real_escape_string($conexao, $_POST['usuario_id']);
 	$nome = mysqli_real_escape_string($conexao, trim($_POST['nome']));
 	$email = mysqli_real_escape_string($conexao, trim($_POST['email']));
 	$data_nascimento = mysqli_real_escape_string($conexao, trim($_POST['data_nascimento']));
 	$senha = mysqli_real_escape_string($conexao, trim($_POST['senha']));
+	
 	$sql = "UPDATE login SET nome = '$nome', email = '$email', data_nascimento = '$data_nascimento'";
+	
 	if (!empty($senha)) {
 		$sql .= ", senha='" . password_hash($senha, PASSWORD_DEFAULT) . "'";
 	}
+	
 	$sql .= " WHERE id = '$usuario_id'";
+	
 	mysqli_query($conexao, $sql);
 
 	// confirmação da atualização
@@ -55,8 +62,11 @@ if (isset($_POST['update_usuario'])) {
 // Delete Usuario
 if (isset($_POST['delete_usuario'])) {
 	$usuario_id = mysqli_real_escape_string($conexao, $_POST['delete_usuario']);
+	
 	$sql = "DELETE FROM login WHERE id = '$usuario_id'";
+	
 	mysqli_query($conexao, $sql);
+	
 	if (mysqli_affected_rows($conexao) > 0) {
 		$_SESSION['message'] = 'Usuário deletado com sucesso';
 		header('Location: ../public/index.php');
@@ -68,3 +78,5 @@ if (isset($_POST['delete_usuario'])) {
 	}
 }
 ?>
+
+<!-- Criação do usuario, atualização e deletar usuario criados com sucesso. -->
