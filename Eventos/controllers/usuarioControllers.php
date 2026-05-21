@@ -3,7 +3,7 @@
 <?php
 session_start();
 
-require __DIR__ . '../../config/conexao.php';
+require __DIR__ . '/../config/conexao.php';
 
 // Criar usuario
 if (isset($_POST['create_usuario'])) {
@@ -12,7 +12,7 @@ if (isset($_POST['create_usuario'])) {
 	$data_nascimento = mysqli_real_escape_string($conexao, trim($_POST['data_nascimento']));
 	$senha = isset($_POST['senha']) ? mysqli_real_escape_string($conexao, password_hash(trim($_POST['senha']), PASSWORD_DEFAULT)) : '';
 	
-	$sql = "INSERT INTO login (nome, email, data_nascimento, senha) VALUES ('$nome', '$email', '$data_nascimento', '$senha')";
+	$sql = "INSERT INTO usuarios (nome, email, data_nascimento, senha) VALUES ('$nome', '$email', '$data_nascimento', '$senha')";
 	
 	mysqli_query($conexao, $sql);
 

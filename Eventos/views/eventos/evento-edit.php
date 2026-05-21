@@ -20,7 +20,7 @@ require __DIR__ . '/../../config/conexao.php';
   <div class="container mt-5">
     <div class="card">
       <div class="card-header">
-        <h4>Editar Evento <a href="../../public/index.php" class="btn btn-danger float-end">Voltar</a></h4>
+        <h4>Editar Evento <a href="../../public/dashboard.php" class="btn btn-danger float-end">Voltar</a></h4>
       </div>
       <div class="card-body">
 
@@ -34,7 +34,7 @@ require __DIR__ . '/../../config/conexao.php';
           if (mysqli_num_rows($query) > 0) {
             $evento = mysqli_fetch_array($query);
         ?>
-            <form action="../../controllers/acoes.php" method="POST">
+            <form action="../../controllers/eventoControllers.php" method="POST">
               <!-- Identifica o ID do evento atual para atualizar a linha certa no banco -->
               <input type="hidden" name="evento_id" value="<?= $evento['id'] ?>">
 

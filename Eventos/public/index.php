@@ -1,81 +1,55 @@
-<?php
-session_start();
-/*if (!isset($_SESSION['usuario'])) {
-  header('Location: /login.php');
-  exit;
-}
-*/
-
-require __DIR__ . '../../config/conexao.php';
-
-?>
+<?php session_start(); ?>
 <!doctype html>
 <html lang="pt-br">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Usuários</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>Início - Empresa de Eventos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .hero-section { background-color: #f8f9fa; padding: 60px 0; text-align: center; border-bottom: 2px solid #dee2e6; }
+      .hero-section h1 { font-weight: bold; margin-bottom: 20px; }
+      .features { margin-top: 40px; }
+      .feature-box { text-align: center; padding: 20px; }
+    </style>
   </head>
   <body>
     <?php include('../views/layouts/navbar.php'); ?>
-    <div class="container mt-4">
-      <?php include('../views/layouts/mensagem.php'); ?>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-header">
-              <h4> Lista de Eventos
-                <a href="../views/eventos/evento-create.php" class="btn btn-primary float-end">Adicionar evento</a>
-              </h4>
-            </div>
-            <div class="card-body">
-              <table class="table table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Data Evento</th>
-                    <th>Capacidade</th>
-                    <th>Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php
-                  $sql = 'SELECT * FROM eventos';
-                  $eventos = mysqli_query($conexao, $sql);
-                  if (mysqli_num_rows($eventos) > 0) {
-                    foreach($eventos as $evento) {
-                  ?>
-                  <tr>
-                    <td><?=$evento['id']?></td>
-                    <td><?=$evento['nome']?></td>
-                    <td><?=date('d/m/Y', strtotime($evento['data_evento']))?></td>
-                    <td><?=$evento['capacidade']?></td>
-                    <td>
-                      <a href="../views/eventos/evento-view.php?id=<?=$evento['id']?>" class="btn btn-secondary btn-sm"><span class="bi-eye-fill"></span>&nbsp;Visualizar</a>
-                      <a href="../views/eventos/evento-edit.php?id=<?=$evento['id']?>" class="btn btn-success btn-sm"><span class="bi-pencil-fill"></span>&nbsp;Editar</a>
-                      <form action="../controllers/acoes.php" method="POST" class="d-inline">
-                        <button onclick="return confirm('Tem certeza que deseja excluir?')" type="submit" name="delete_evento" value="<?=$evento['id']?>" class="btn btn-danger btn-sm">
-                          <span class="bi-trash3-fill"></span>&nbsp;Excluir
-                        </button>
-                      </form>
-                    </td>
-                  </tr>
-                  <?php
-                  }
-                 } else {
-                   echo '<h5>Nenhum evento encontrado</h5>';
-                 }
-                 ?>
-                </tbody>
-              </table><a href='../logout.php'>Sair </a>
-            </div>
-          </div>
+
+    <div class="hero-section">
+      <div class="container">
+        <h1 class="display-4 text-dark">Bem-vindo à FSA Eventos</h1>
+        <p class="lead text-secondary">
+          Especialistas em criar momentos inesquecíveis! O sistema completo e inteligente <br> para a gestão dos seus melhores eventos.
+        </p>
+        <div class="mt-4">
+          <a href="../views/auth/login.php" class="btn btn-primary btn-lg me-2">Acessar Sistema</a>
+          <a href="../views/auth/register.php" class="btn btn-outline-dark btn-lg">Quero criar minha conta</a>
         </div>
       </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <div class="container features">
+      <div class="row text-center">
+        <div class="col-md-4 feature-box">
+          <h3>Planejamento</h3>
+          <p class="text-muted">Gerencie a capacidade, datas e informações essenciais num painel totalmente flexível para eventos da sua empresa ou show pessoal.</p>
+        </div>
+        <div class="col-md-4 feature-box">
+          <h3>Simplicidade</h3>
+          <p class="text-muted">Acessibilidade, praticidade e clareza. Você poderá editar tudo facilmente de forma moderna pelo sistema!</p>
+        </div>
+        <div class="col-md-4 feature-box">
+          <h3>Exclusividade</h3>
+          <p class="text-muted">Você não precisa dividir planilhas com terceiros. A FSA traz seu sistema direto para a palma da mão, fechado somente para administradores credenciados.</p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="text-center mt-5 py-4 bg-light text-secondary">
+        <p>&copy; <?= date('Y'); ?> Sistema de Eventos FSA - Desenvolvido pela Equipe 3B</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

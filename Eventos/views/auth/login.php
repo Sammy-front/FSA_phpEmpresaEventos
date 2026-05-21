@@ -1,74 +1,112 @@
 <?php
 session_start();
 
-require __DIR__ . '../../../config/conexao.php'; // Conectar ao banco
+require __DIR__ . '/../../config/conexao.php'; // Conecta ao banco
 
 if (isset($_POST['login_usuario'])) {
-    // Sanitize e escape as variáveis para evitar SQL Injection
-    $usuario = mysqli_real_escape_string($conexao, trim($_POST['usuario']));
-    $senha = mysqli_real_escape_string($conexao, trim($_POST['senha']));
 
-    // Consulta para buscar o usuário e a senha hashada no banco
-    $sql = "SELECT * FROM login WHERE email = '$usuario' LIMIT 1";
-    $resultado = mysqli_query($conexao, $sql);
+    // Captura e sanitização
+    $usuario = trim($_POST['usuario']);
+    $senha = trim($_POST['senha']);
 
-    if ($resultado && mysqli_num_rows($resultado) > 0) {
-        // Buscar os dados do usuário
-        $usuarioDB = mysqli_fetch_assoc($resultado);
+    // Verifica se os campos foram preenchidos
+    if (empty($usuario) || empty($senha)) {
+        $_SESSION['mensagem'] = 'Preencha todos os campos.';
+        header('Location: login.php');
+        exit;
+    }
 
-        // Verificar se a senha informada corresponde ao hash armazenado
-        if (password_verify($senha, $usuarioDB['senha'])) {
-            // Senha correta, criar a sessão
-            $_SESSION['usuario'] = $usuarioDB['email'];
-            $_SESSION['nome'] = $usuarioDB['nome'];
-            header('Location: ../../public/index.php');
-            exit;
+    // Prepared Statement
+    $sql = "SELECT id, nome, email, senha, cargo FROM usuarios WHERE email = ? LIMIT 1";
+    $stmt = mysqli_prepare($conexao, $sql);
+
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "s", $usuario);
+        mysqli_stmt_execute($stmt);
+        $resultado = mysqli_stmt_get_result($stmt);
+
+        if ($resultado && mysqli_num_rows($resultado) > 0) {
+
+            $usuarioDB = mysqli_fetch_assoc($resultado);
+
+            // Verificação da senha
+            if (password_verify($senha, $usuarioDB['senha'])) {
+
+                // Armazena informações da sessão
+                $_SESSION['usuario'] = $usuarioDB['email'];
+                $_SESSION['nome'] = $usuarioDB['nome'];
+                $_SESSION['cargo'] = $usuarioDB['cargo'];
+
+                // 🔥 Verificação do cargo e redirecionamento correto
+                if ($usuarioDB['cargo'] === 'adm') {
+                    header('Location: ../../public/dashboard.php');
+                    exit;
+                } else {
+                    header('Location: ../../public/index.php');
+                    exit;
+                }
+
+            } else {
+                $_SESSION['mensagem'] = 'Senha incorreta.';
+                header('Location: login.php');
+                exit;
+            }
         } else {
-            // Senha incorreta
-            $_SESSION['mensagem'] = 'Senha incorreta.';
+            $_SESSION['mensagem'] = 'Usuário não encontrado.';
             header('Location: login.php');
             exit;
         }
     } else {
-        // Usuário não encontrado
-        $_SESSION['mensagem'] = 'Usuário não encontrado.';
+        $_SESSION['mensagem'] = 'Erro no servidor. Tente novamente mais tarde.';
         header('Location: login.php');
         exit;
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="stylesheet" href="../../public/css/style.css">
 </head>
 
 <body>
-    <h2>Login</h2>
+    <div class="container login-container">
 
-    <?php if (isset($_SESSION['mensagem'])): ?>
-        <p style="color: red;"><?php echo $_SESSION['mensagem']; ?></p>
-        <?php unset($_SESSION['mensagem']); ?>
-    <?php endif; ?>
+        <h2>Entrar no Sistema</h2>
 
-    <form method="POST">
-        <label for="usuario">Usuário (Email):</label><br>
-        <input type="text" id="usuario" name="usuario" required><br><br>
+        <?php if (isset($_SESSION['mensagem'])): ?>
+            <p style="color: red; text-align:center;">
+                <?php echo $_SESSION['mensagem']; ?>
+            </p>
+            <?php unset($_SESSION['mensagem']); ?>
+        <?php endif; ?>
 
-        <label for="senha">Senha:</label><br>
-        <input type="password" id="senha" name="senha" required><br><br>
+        <form method="POST">
+            <div class="form-group">
+                <label for="usuario">E-mail</label>
+                <input type="email" id="usuario" name="usuario" required placeholder="Digite seu e-mail">
+            </div>
 
-        <hr>
-        <p>Não possui uma conta?</p>
-        <a href="../auth/register.php">Cadastre-se aqui</a>
-        <hr>
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" name="senha" required placeholder="Digite sua senha">
+            </div>
 
-        <button type="submit" name="login_usuario">Entrar</button>
-    </form>
+            <button type="submit" name="login_usuario" class="btn btn-primary" style="width: 100%;">Entrar</button>
+        </form>
 
+        <p style="margin-top: 15px; text-align: center;">
+            Não tem uma conta? <a href="../auth/register.php">Cadastre-se</a>
+        </p>
+
+        <p style="margin-top: 15px; text-align: center;">
+            Voltar à <a href="../../public/index.php">HOME</a>
+        </p>
+
+    </div>
 </body>
 
 </html>

@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require __DIR__ . '../../../config/conexao.php';
+require __DIR__ . '/../../config/conexao.php';
 
 
 if (!isset($_SESSION['usuario'])) {
@@ -25,7 +25,7 @@ if (!isset($_SESSION['usuario'])) {
           <div class="card">
             <div class="card-header">
               <h4>Visualizar usuário
-                <a href="../../public/index.php" class="btn btn-danger float-end">Voltar</a>
+                <a href="../../public/dashboard.php" class="btn btn-danger float-end">Voltar</a>
               </h4>
             </div>
             <div class="card-body">
