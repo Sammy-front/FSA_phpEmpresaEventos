@@ -5,13 +5,14 @@ require __DIR__ . '/../config/conexao.php';
 // CREATE (Criar Evento)
 if (isset($_POST['create_evento'])) {
     $nome        = mysqli_real_escape_string($conexao, trim($_POST['nome']));
+    $descricao = mysqli_real_escape_string($conexao, trim($_POST['descricao']));
     $data_evento = mysqli_real_escape_string($conexao, trim($_POST['data_evento']));
     $horario = mysqli_real_escape_string($conexao, trim($_POST['horario']));
-    $localidade = mysqli_real_escape_string($conexao, trim($_POST['localidade']));
     $capacidade  = mysqli_real_escape_string($conexao, trim($_POST['capacidade']));
+    $localidade = mysqli_real_escape_string($conexao, trim($_POST['localidade']));
     $status_evento = mysqli_real_escape_string($conexao, trim($_POST['status_evento']));
 
-    $sql = "INSERT INTO eventos (nome, data_evento, capacidade) VALUES ('$nome', '$data_evento', '$capacidade')";
+    $sql = "INSERT INTO eventos (nome, descricao, data_evento, horario, localidade, capacidade, status_evento) VALUES ('$nome', '$descricao', '$data_evento', '$horario', '$localidade', '$capacidade', '$status_evento')";
     mysqli_query($conexao, $sql);
 
     if (mysqli_affected_rows($conexao) > 0) {
@@ -19,18 +20,24 @@ if (isset($_POST['create_evento'])) {
     } else {
         $_SESSION['mensagem'] = 'Erro ao criar evento.';
     }
-    header('Location: ../public/index.php');
+    header('Location: ../public/dashboard.php');
     exit;
 }
 
 // UPDATE (Editar Evento)
 if (isset($_POST['update_evento'])) {
+    
     $evento_id   = mysqli_real_escape_string($conexao, $_POST['evento_id']); // Vem do input HIDDEN do forms!
     $nome        = mysqli_real_escape_string($conexao, trim($_POST['nome']));
+    $descricao = mysqli_real_escape_string($conexao, trim($_POST['descricao']));
     $data_evento = mysqli_real_escape_string($conexao, trim($_POST['data_evento']));
+    $horario = mysqli_real_escape_string($conexao, trim($_POST['horario']));
     $capacidade  = mysqli_real_escape_string($conexao, trim($_POST['capacidade']));
+    $localidade = mysqli_real_escape_string($conexao, trim($_POST['localidade']));
+    $status_evento = mysqli_real_escape_string($conexao, trim($_POST['status_evento']));
 
-    $sql = "UPDATE eventos SET nome='$nome', data_evento='$data_evento', capacidade='$capacidade' WHERE id='$evento_id'";
+    // AQUI SAMUEL AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+    $sql = "UPDATE eventos SET nome='$nome', descricao='$descricao', data_evento='$data_evento', horario='$horario', capacidade='$capacidade', localidade='$localidade', status_evento='$status_evento' WHERE id='$evento_id'";
     mysqli_query($conexao, $sql);
 
     if (mysqli_affected_rows($conexao) > 0) {
