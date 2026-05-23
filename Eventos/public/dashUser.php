@@ -105,7 +105,7 @@ require __DIR__ . '/../config/conexao.php';
                                 </p>
                                 
                                 <div class="d-flex gap-4 text-dark small">
-                                  <span><i class="bi bi-clock text-primary"></i> <strong>Horário:</strong> <?=date('H:i', strtotime($evento['horario']))?></span>
+                                  <span><i class="bi bi-clock text-primary"></i> <strong>Horário:</strong> <?=nl2br(htmlspecialchars($evento['horario']))?></span>
                                   <span><i class="bi bi-people text-primary"></i> <strong>Capacidade:</strong> <?=$evento['capacidade']?> pessoas</span>
                                 </div>
                               </div>
