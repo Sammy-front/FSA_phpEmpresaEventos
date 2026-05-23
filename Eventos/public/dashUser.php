@@ -128,10 +128,14 @@ require __DIR__ . '/../config/conexao.php';
                                     <strong>Inscrições Fechadas</strong>
                                   </div>
                                 <?php else: ?>
+
+
                                   <!-- Botão de inscrição normal -->
-                                  <a href="inscricao.php?id_evento=<?=$evento['id']?>" class="btn btn-primary btn-lg shadow-sm w-100">
+                                  <a href="../views/inscricoes/inscricao.php?id=<?=$evento['id']?>" class="btn btn-primary btn-lg shadow-sm w-100">
                                     <i class="bi bi-check2-circle"></i> Quero Participar
                                   </a>
+
+                                  
                                 <?php endif; ?>
 
                               </div>
