@@ -28,7 +28,7 @@ if (isset($_POST['create_evento'])) {
 
 // UPDATE (Editar Evento)
 if (isset($_POST['update_evento'])) {
-    
+
     $evento_id   = mysqli_real_escape_string($conexao, $_POST['evento_id']); // Vem do input HIDDEN do forms
     $nome        = mysqli_real_escape_string($conexao, trim($_POST['nome']));
     $descricao = mysqli_real_escape_string($conexao, trim($_POST['descricao']));
