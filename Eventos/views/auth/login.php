@@ -42,7 +42,7 @@ if (isset($_POST['login_usuario'])) {
                     header('Location: ../../public/dashboard.php');
                     exit;
                 } else {
-                    header('Location: ../../public/index.php');
+                    header('Location: ../../public/dashUser.php');
                     exit;
                 }
 

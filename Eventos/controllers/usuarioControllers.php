@@ -18,8 +18,7 @@ if (isset($_POST['create_usuario'])) {
 	mysqli_query($conexao, $sql);
 
 	if (mysqli_affected_rows($conexao) > 0) {
-		$_SESSION['mensagem'] = 'Usuário criado com sucesso';
-		header('Location: ../public/index.php');
+		header('Location: ../views/auth/login.php');
 		exit;
 	} else {
 		$_SESSION['mensagem'] = 'Usuário não foi criado';

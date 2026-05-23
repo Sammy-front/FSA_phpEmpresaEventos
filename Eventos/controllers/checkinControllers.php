@@ -2,6 +2,8 @@
 session_start();
 require __DIR__ . '/../config/conexao.php';
 
+
+
 // CREATE (Criar Evento)
 if (isset($_POST['create_evento'])) {
     $nome        = mysqli_real_escape_string($conexao, trim($_POST['nome']));
