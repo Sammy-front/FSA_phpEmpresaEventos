@@ -70,8 +70,10 @@ require __DIR__ . '/../config/conexao.php';
                     
                     if (mysqli_num_rows($eventos) > 0) {
                       foreach($eventos as $evento) {
-                        // Cria um ID único para o collapse de cada evento
                         $collapseId = "collapseEvento" . $evento['id'];
+                        
+                        // Normaliza o texto do status para minúsculo para facilitar a validação
+                        $statusAtual = strtolower(trim($evento['status_evento']));
                     ?>
                     
                     <!-- LINHA PRINCIPAL VISÍVEL (Clicável) -->
@@ -80,9 +82,15 @@ require __DIR__ . '/../config/conexao.php';
                       <td><i class="bi bi-geo-alt text-muted"></i> <?=$evento['localidade']?></td>
                       <td><i class="bi bi-calendar-event text-muted"></i> <?=date('d/m/Y', strtotime($evento['data_evento']))?></td>
                       <td>
-                        <!-- Simples verificação de cor por status (Ajuste conforme as palavras do seu banco) -->
+                        <!-- Definindo a cor da badge de acordo com o status -->
                         <?php 
-                          $corBadge = ($evento['status_evento'] == 'Aberto' || $evento['status_evento'] == 'Disponível') ? 'bg-success' : 'bg-secondary';
+                          if ($statusAtual == 'fechado') {
+                              $corBadge = 'bg-danger';
+                          } elseif ($statusAtual == 'aberto' || $statusAtual == 'disponível') {
+                              $corBadge = 'bg-success';
+                          } else {
+                              $corBadge = 'bg-secondary';
+                          }
                         ?>
                         <span class="badge <?=$corBadge?>"><?=$evento['status_evento']?></span>
                       </td>
@@ -110,12 +118,22 @@ require __DIR__ . '/../config/conexao.php';
                                 </div>
                               </div>
                               
-                              <!-- Coluna do Botão de Inscrição -->
+                              <!-- Coluna do Botão / Bloco de Inscrição -->
                               <div class="col-md-3 d-flex align-items-center justify-content-end mt-3 mt-md-0 border-start">
-                                <!-- Link para a página que irá processar a inscrição. Substitua 'inscricao.php' pela sua rota real -->
-                                <a href="inscricao.php?id_evento=<?=$evento['id']?>" class="btn btn-primary btn-lg shadow-sm w-100">
-                                  <i class="bi bi-check2-circle"></i> Quero Participar
-                                </a>
+                                
+                                <?php if ($statusAtual == 'fechado'): ?>
+                                  <!-- Bloco indicando que o evento está fechado -->
+                                  <div class="w-100 text-center p-3 bg-light border border-danger-subtle rounded text-danger opacity-75">
+                                    <i class="bi bi-lock-fill fs-4 d-block mb-1"></i>
+                                    <strong>Inscrições Fechadas</strong>
+                                  </div>
+                                <?php else: ?>
+                                  <!-- Botão de inscrição normal -->
+                                  <a href="inscricao.php?id_evento=<?=$evento['id']?>" class="btn btn-primary btn-lg shadow-sm w-100">
+                                    <i class="bi bi-check2-circle"></i> Quero Participar
+                                  </a>
+                                <?php endif; ?>
+
                               </div>
                             </div>
                           </div>
