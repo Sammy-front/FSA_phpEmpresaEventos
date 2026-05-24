@@ -51,15 +51,6 @@ session_start();
               </div>
 
               <div class="mb-3">
-                <label for="cargo" class="form-label">Cargo</label>
-                <select name="cargo" id="cargo" class="form-control" required>
-                  <option value="usuario">usuario</option>
-                  <option value="adm">adm</option>
-                </select>
-              </div>
-
-
-              <div class="mb-3">
                 <button type="submit" name="create_usuario" class="btn btn-primary w-100">
                   Cadastrar
                 </button>
