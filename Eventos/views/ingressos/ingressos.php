@@ -83,31 +83,28 @@ $id_usuario = mysqli_fetch_assoc($query_user)['id'];
 </head>
 
 <body class="bg-light">
-    <?php include('../layouts/navbar.php'); ?>
+    <?php include('../../views/layouts/navbar.php'); ?>
 
     <div class="container mt-4 mb-5">
-        <?php include('../layouts/mensagem.php'); ?>
+        <?php include('../../views/layouts/mensagem.php'); ?>
 
         <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
             <h2><i class="bi bi-wallet2 text-primary"></i> Meus Ingressos</h2>
-            <a href="dashUser.php" class="btn btn-outline-dark shadow-sm"><i class="bi bi-calendar2-event"></i> Explorar Novos Eventos</a>
+            <a href="../../public/dashUser.php" class="btn btn-outline-dark shadow-sm"><i class="bi bi-calendar2-event"></i> Explorar Novos Eventos</a>
         </div>
 
         <div class="row g-4">
             <?php
-            // =========================================================================
-            // MAGIA RELACIONAL SQL (JOIN) => Buscamos: O INGRESSO > O TIPO > O EVENTO > CHECKIN
-            // =========================================================================
             $sql = "SELECT 
-                      i.id AS numero_ingresso,
-                      i.status_inscricao,
-                      i.data_inscricao,
-                      t.nome_ingresso AS setor_ingresso,
-                      e.nome AS nome_evento,
-                      e.data_evento,
-                      e.horario,
-                      e.localidade,
-                      c.data_entrada AS feito_checkin
+                    i.id AS numero_ingresso,
+                    i.status_inscricao,
+                    i.data_inscricao,
+                    t.nome_ingresso AS setor_ingresso,
+                    e.nome AS nome_evento,
+                    e.data_evento,
+                    e.horario,
+                    e.localidade,
+                    c.data_entrada AS feito_checkin
                   FROM inscricoes i
                   INNER JOIN eventos e ON i.id_evento = e.id
                   INNER JOIN tipos_ingressos t ON i.id_tipo_ingresso = t.id
@@ -187,7 +184,7 @@ $id_usuario = mysqli_fetch_assoc($query_user)['id'];
                     <i class="bi bi-ticket-perforated-fill text-muted mb-3 d-block" style="font-size: 4rem;"></i>
                     <h4 class="text-dark fw-light">Sua carteira está vazia!</h4>
                     <p class="text-muted">Você ainda não se inscreveu ou garantiu sua presença em nenhum evento do sistema.</p>
-                    <a href="dashUser.php" class="btn btn-primary mt-3 px-5 py-2">Explorar Festas / Palestras</a>
+                    <a href="../../public/dashUser.php" class="btn btn-primary mt-3 px-5 py-2">Explorar Festas / Palestras</a>
                 </div>
             <?php } ?>
 
