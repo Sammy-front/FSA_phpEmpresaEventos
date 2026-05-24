@@ -1,22 +1,18 @@
 <?php
 session_start();
 
-require __DIR__ . '/../../config/conexao.php'; // Conecta ao banco
+require __DIR__ . '/../../config/conexao.php';
 
 if (isset($_POST['login_usuario'])) {
-
-    // Captura e sanitização
     $usuario = trim($_POST['usuario']);
     $senha = trim($_POST['senha']);
 
-    // Verifica se os campos foram preenchidos
     if (empty($usuario) || empty($senha)) {
         $_SESSION['mensagem'] = 'Preencha todos os campos.';
         header('Location: login.php');
         exit;
     }
 
-    // Prepared Statement
     $sql = "SELECT id, nome, email, senha, cargo FROM usuarios WHERE email = ? LIMIT 1";
     $stmt = mysqli_prepare($conexao, $sql);
 
@@ -29,15 +25,11 @@ if (isset($_POST['login_usuario'])) {
 
             $usuarioDB = mysqli_fetch_assoc($resultado);
 
-            // Verificação da senha
             if (password_verify($senha, $usuarioDB['senha'])) {
-
-                // Armazena informações da sessão
                 $_SESSION['usuario'] = $usuarioDB['email'];
                 $_SESSION['nome'] = $usuarioDB['nome'];
                 $_SESSION['cargo'] = $usuarioDB['cargo'];
 
-                // 🔥 Verificação do cargo e redirecionamento correto
                 if ($usuarioDB['cargo'] === 'adm') {
                     header('Location: ../../public/dashboard.php');
                     exit;
@@ -45,7 +37,6 @@ if (isset($_POST['login_usuario'])) {
                     header('Location: ../../public/dashUser.php');
                     exit;
                 }
-
             } else {
                 $_SESSION['mensagem'] = 'Senha incorreta.';
                 header('Location: login.php');

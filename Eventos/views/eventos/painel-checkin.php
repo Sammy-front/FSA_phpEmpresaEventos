@@ -24,14 +24,17 @@ require __DIR__ . '/../../config/conexao.php';
       border: 2px dashed #0d6efd;
       background-color: #f8f9fa;
     }
+
     .bg-tabela-destaque {
       background-color: #f1f4f8;
     }
+
     .accordion-button:not(.collapsed) {
       background-color: #e9ecef;
       color: #000;
       box-shadow: none;
     }
+
     .status-check {
       min-width: 130px;
       text-align: center;
@@ -111,8 +114,6 @@ require __DIR__ . '/../../config/conexao.php';
                     <div>Ainda não existem participantes confirmados (inscrições/compras efetuadas) para este evento específico. Fique atento às futuras vendas.</div>
                   </div>
                 <?php else: ?>
-
-                  <!-- TABELA CORPORATIVA DOS INSCRITOS -->
                   <div class="table-responsive bg-white rounded shadow-sm border">
                     <table class="table table-hover text-center align-middle mb-0">
                       <thead class="table-dark">

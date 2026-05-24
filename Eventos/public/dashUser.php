@@ -81,22 +81,20 @@ require __DIR__ . '/../config/conexao.php';
                     foreach ($eventos as $evento) {
                       $collapseId = "collapseEvento" . $evento['id'];
                       $id_atual = $evento['id'];
-
                       $statusAtual = strtolower(trim($evento['status_evento']));
-
-                      // calculo das vagas restantes
                       $capacidade = $evento['capacidade'];
                       $consulta_ocupacao = mysqli_query($conexao, "SELECT COUNT(id) AS qtd_comprados FROM inscricoes WHERE id_evento='$id_atual' AND status_inscricao != 'cancelada'");
                       $dados_ocupacao = mysqli_fetch_assoc($consulta_ocupacao);
                       $total_comprados = $dados_ocupacao['qtd_comprados'];
-
                       $vagas_restantes = $capacidade - $total_comprados;
+
                       if ($vagas_restantes < 0) {
                         $vagas_restantes = 0;
                       }
-                      $evento_esgotado = ($vagas_restantes == 0);
 
+                      $evento_esgotado = ($vagas_restantes == 0);
                   ?>
+
                       <tr class="main-row" data-bs-toggle="collapse" data-bs-target="#<?= $collapseId ?>" aria-expanded="false" aria-controls="<?= $collapseId ?>" style="cursor: pointer;">
                         <td class="ps-4 fw-bold text-primary">
 
@@ -134,11 +132,9 @@ require __DIR__ . '/../config/conexao.php';
                           <div class="collapse" id="<?= $collapseId ?>">
                             <div class="card card-body m-3 shadow-sm border-start border-primary border-4 bg-white">
                               <div class="row">
-
-                                <!-- Coluna da Descrição -->
                                 <div class="col-md-9">
-
                                   <h6 class="text-uppercase text-muted fw-bold mb-2">Sobre o Evento</h6>
+
                                   <p class="mb-3">
                                     <?= !empty($evento['descricao']) ? nl2br(htmlspecialchars($evento['descricao'])) : '<em>Nenhuma descrição detalhada disponível para este evento.</em>' ?>
                                   </p>
@@ -196,7 +192,6 @@ require __DIR__ . '/../config/conexao.php';
       </div>
     </div>
   </div>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

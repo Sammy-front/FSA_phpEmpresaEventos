@@ -19,18 +19,17 @@ if (isset($_POST['realizar_inscricao'])) {
     if (mysqli_num_rows($sql_user) == 0) {
         die("Usuário inválido ou Sessão expirou.");
     }
-    $id_usuario = mysqli_fetch_assoc($sql_user)['id'];
 
+    $id_usuario = mysqli_fetch_assoc($sql_user)['id'];
     $verifica_capacidade = mysqli_query($conexao, "SELECT capacidade FROM eventos WHERE id = '$id_evento' LIMIT 1");
     $capacidade_maxima = mysqli_fetch_assoc($verifica_capacidade)['capacidade'];
-
     $verifica_vendidos = mysqli_query($conexao, "SELECT COUNT(id) as total_vendidos FROM inscricoes WHERE id_evento = '$id_evento' AND status_inscricao != 'cancelada'");
     $vendidos = mysqli_fetch_assoc($verifica_vendidos)['total_vendidos'];
 
 
     if (($vendidos + $quantidade) > $capacidade_maxima) {
         $sobrou = $capacidade_maxima - $vendidos;
-        $_SESSION['mensagem'] = "❌ Venda bloqueada. O evento atingiu sua capacidade. Temos apenas $sobrou vaga(s) restante(s).";
+        $_SESSION['mensagem'] = "Venda bloqueada. O evento atingiu sua capacidade. Temos apenas $sobrou vaga(s) restante(s).";
         header("Location: ../views/inscricoes/inscricao.php?id=$id_evento");
         exit;
     }
@@ -45,21 +44,18 @@ if (isset($_POST['realizar_inscricao'])) {
     $inseridos = 0;
 
     for ($i = 0; $i < $quantidade; $i++) {
-        $sql_inserir = "INSERT INTO inscricoes (id_evento, id_usuario, id_tipo_ingresso, id_lote, status_inscricao) 
-                        VALUES ('$id_evento', '$id_usuario', '$id_tipo_ingresso', $id_lote, 'paga')";
-
+        $sql_inserir = "INSERT INTO inscricoes (id_evento, id_usuario, id_tipo_ingresso, id_lote, status_inscricao) VALUES ('$id_evento', '$id_usuario', '$id_tipo_ingresso', $id_lote, 'paga')";
         mysqli_query($conexao, $sql_inserir);
         if (mysqli_affected_rows($conexao) > 0) {
             $inseridos++;
         }
     }
 
-
     if ($inseridos == $quantidade) {
         if ($quantidade == 1) {
-            $_SESSION['mensagem'] = "✅ Seu Ticket para a festa foi emitido e salvo na sua carteira digital! Status: PAGO.";
+            $_SESSION['mensagem'] = "Seu Ticket para a festa foi emitido e salvo na sua carteira digital! Status: PAGO.";
         } else {
-            $_SESSION['mensagem'] = "✅ Você comprou <b>$quantidade convites</b> simultâneos. Aproveite muito o Evento com seus convidados. Status: PAGOS.";
+            $_SESSION['mensagem'] = "Você comprou <b>$quantidade convites</b> simultâneos. Aproveite muito o Evento com seus convidados. Status: PAGOS.";
         }
     } else {
         $_SESSION['mensagem'] = "Atenção: Apenas $inseridos Ingressos registrados com sucesso! Fale com o ADM do sistema sobre instabilidade do banco!";

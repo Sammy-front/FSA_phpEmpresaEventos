@@ -25,10 +25,7 @@ $capacidade_maxima = $evento['capacidade'];
 $query_vendidos = mysqli_query($conexao, "SELECT COUNT(id) as total FROM inscricoes WHERE id_evento='$id_evento' AND status_inscricao != 'cancelada'");
 $dados_vendidos = mysqli_fetch_assoc($query_vendidos);
 $ingressos_vendidos = $dados_vendidos['total'];
-
 $restantes = $capacidade_maxima - $ingressos_vendidos;
-
-// Se for menor que 0, garante que mostre 0
 if ($restantes < 0) $restantes = 0;
 ?>
 

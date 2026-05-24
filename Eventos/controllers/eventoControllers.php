@@ -2,9 +2,8 @@
 session_start();
 require __DIR__ . '/../config/conexao.php';
 
-// ==========================================
-// 1. CREATE - CRIAR EVENTO E INGRESSOS
-// ==========================================
+
+// CRIAR EVENTO E INGRESSOS
 if (isset($_POST['create_evento'])) {
     $nome          = mysqli_real_escape_string($conexao, trim($_POST['nome']));
     $descricao     = mysqli_real_escape_string($conexao, trim($_POST['descricao']));
@@ -14,24 +13,20 @@ if (isset($_POST['create_evento'])) {
     $capacidade    = mysqli_real_escape_string($conexao, trim($_POST['capacidade']));
     $status_evento = mysqli_real_escape_string($conexao, trim($_POST['status_evento']));
 
-    $sql_evento = "INSERT INTO eventos (nome, descricao, data_evento, horario, localidade, capacidade, status_evento) 
-                   VALUES ('$nome', '$descricao', '$data_evento', '$horario', '$localidade', '$capacidade', '$status_evento')";
-    
+    $sql_evento = "INSERT INTO eventos (nome, descricao, data_evento, horario, localidade, capacidade, status_evento) VALUES ('$nome', '$descricao', '$data_evento', '$horario', '$localidade', '$capacidade', '$status_evento')";
+
     if (mysqli_query($conexao, $sql_evento)) {
-        // Pega o ID do evento criado para vincular os ingressos nele
         $id_novo_evento = mysqli_insert_id($conexao);
 
-        if(isset($_POST['ticket_nome']) && isset($_POST['ticket_valor'])){
+        if (isset($_POST['ticket_nome']) && isset($_POST['ticket_valor'])) {
             $nomes_ingressos   = $_POST['ticket_nome'];
             $valores_ingressos = $_POST['ticket_valor'];
 
             for ($i = 0; $i < count($nomes_ingressos); $i++) {
                 $nome_ing  = mysqli_real_escape_string($conexao, $nomes_ingressos[$i]);
                 $valor_ing = mysqli_real_escape_string($conexao, $valores_ingressos[$i]);
-
                 if (!empty($nome_ing) && $valor_ing !== '') {
-                    $sql_ing = "INSERT INTO tipos_ingressos (id_evento, nome_ingresso, valor) 
-                                VALUES ('$id_novo_evento', '$nome_ing', '$valor_ing')";
+                    $sql_ing = "INSERT INTO tipos_ingressos (id_evento, nome_ingresso, valor) VALUES ('$id_novo_evento', '$nome_ing', '$valor_ing')";
                     mysqli_query($conexao, $sql_ing);
                 }
             }
@@ -46,9 +41,8 @@ if (isset($_POST['create_evento'])) {
     exit;
 }
 
-// ==========================================
-// 2. UPDATE - EDITAR EVENTO
-// ==========================================
+
+// EDITAR EVENTO
 if (isset($_POST['update_evento'])) {
     $evento_id     = mysqli_real_escape_string($conexao, $_POST['evento_id']);
     $nome          = mysqli_real_escape_string($conexao, trim($_POST['nome']));
@@ -68,7 +62,7 @@ if (isset($_POST['update_evento'])) {
             localidade='$localidade', 
             status_evento='$status_evento' 
             WHERE id='$evento_id'";
-    
+
     if (mysqli_query($conexao, $sql)) {
         $_SESSION['mensagem'] = "Evento atualizado com sucesso!";
     } else {
@@ -78,9 +72,7 @@ if (isset($_POST['update_evento'])) {
     exit;
 }
 
-// ==========================================
-// 3. DELETE - EXCLUIR EVENTO
-// ==========================================
+// EXCLUIR EVENTO
 if (isset($_POST['delete_evento'])) {
     $evento_id = mysqli_real_escape_string($conexao, $_POST['delete_evento']);
 
@@ -92,7 +84,7 @@ if (isset($_POST['delete_evento'])) {
     } else {
         $_SESSION['mensagem'] = 'Não foi possível deletar o evento.';
     }
-    
+
     // Volta para a página exata que o usuário estava (Dashboard ou Evento-View)
     if (isset($_SERVER['HTTP_REFERER'])) {
         header("Location: " . $_SERVER['HTTP_REFERER']);
@@ -101,4 +93,3 @@ if (isset($_POST['delete_evento'])) {
     }
     exit;
 }
-?>

@@ -1,6 +1,7 @@
 <?php
 session_start();
 ?>
+
 <!doctype html>
 <html lang="pt-br">
 
@@ -12,16 +13,13 @@ session_start();
 </head>
 
 <body>
-
   <?php include(__DIR__ . '/../layouts/navbar.php'); ?>
-
   <div class="container mt-5">
-
     <?php include(__DIR__ . '/../layouts/mensagem.php'); ?>
-
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card">
+
           <div class="card-header">
             <h4>
               Cadastro de Usuário
@@ -30,7 +28,6 @@ session_start();
           </div>
 
           <div class="card-body">
-
             <form action="../../controllers/usuarioControllers.php" method="POST">
 
               <div class="mb-3">
@@ -69,13 +66,11 @@ session_start();
               </div>
 
             </form>
-
           </div>
 
         </div>
       </div>
     </div>
-
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
