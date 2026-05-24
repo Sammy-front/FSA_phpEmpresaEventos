@@ -1,5 +1,4 @@
 <?php
-// Arquivo: views/inscricoes/inscricao.php
 session_start();
 if (!isset($_SESSION['usuario'])) {
     $_SESSION['mensagem'] = 'Você precisa estar logado para comprar/se inscrever.';
@@ -22,10 +21,6 @@ if (mysqli_num_rows($dadosDoEvento) == 0) {
 }
 
 $evento = mysqli_fetch_array($dadosDoEvento);
-
-// ==============================================================
-// VERIFICAR INGRESSOS RESTANTES PARA AVISAR O USUÁRIO E TRAVAR INPUT
-// ==============================================================
 $capacidade_maxima = $evento['capacidade'];
 $query_vendidos = mysqli_query($conexao, "SELECT COUNT(id) as total FROM inscricoes WHERE id_evento='$id_evento' AND status_inscricao != 'cancelada'");
 $dados_vendidos = mysqli_fetch_assoc($query_vendidos);
@@ -62,8 +57,6 @@ if ($restantes < 0) $restantes = 0;
         <?php include('../layouts/mensagem.php'); ?>
 
         <div class="row g-4 align-items-center justify-content-center">
-
-            <!-- LADO ESQUERDO DA COMPRA - RESUMO DO EVENTO -->
             <div class="col-md-5">
                 <div class="card shadow border-0">
                     <img src="https://via.placeholder.com/600x200/0d6efd/FFF?text=<?php echo urlencode($evento['nome']); ?>" class="card-img-top" alt="...">
@@ -77,7 +70,6 @@ if ($restantes < 0) $restantes = 0;
                             <?= date('d/m/Y', strtotime($evento['data_evento'])); ?>
                         </div>
 
-                        <!-- ALERTA DE LOTAÇÃO DA FESTA -->
                         <?php if ($restantes > 0 && $restantes <= 20): ?>
                             <span class="badge bg-warning text-dark p-2">Corra! Restam apenas <?= $restantes ?> vagas.</span>
                         <?php elseif ($restantes == 0): ?>
@@ -89,7 +81,6 @@ if ($restantes < 0) $restantes = 0;
                 </div>
             </div>
 
-            <!-- LADO DIREITO - CARRINHO / QUANTIDADE -->
             <div class="col-md-5">
                 <div class="custom-buy-box shadow-sm border-top border-primary border-4">
                     <h4>Fazer Inscrição:</h4>
@@ -120,10 +111,8 @@ if ($restantes < 0) $restantes = 0;
                             <label for="ticket">Tipo de Ingresso</label>
                         </div>
 
-                        <!-- CAMPO NOVO DE QUANTIDADE -->
                         <div class="form-group mb-3 mt-3">
                             <label for="qtd" class="fw-bold"><i class="bi bi-123"></i> Quantidade de Convites:</label>
-                            <!-- AQUI NÓS COLOCAMOS MAX PARA BARRAR NO HTML -->
                             <input type="number" id="qtd" name="quantidade" class="form-control form-control-lg border-primary" value="1" min="1" max="<?= $restantes ?>" required <?= ($restantes == 0) ? 'disabled' : '' ?>>
                             <small class="text-muted">A quantidade é vinculada em códigos individuais na sua conta.</small>
                         </div>

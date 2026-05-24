@@ -9,7 +9,6 @@ if (!isset($_SESSION['usuario'])) {
 
 require __DIR__ . '/../../config/conexao.php';
 
-// 1. Precisamos da ID exata deste usuário conectado!
 $email_logado = mysqli_real_escape_string($conexao, $_SESSION['usuario']);
 $query_user = mysqli_query($conexao, "SELECT id FROM usuarios WHERE email = '$email_logado' LIMIT 1");
 if (mysqli_num_rows($query_user) == 0) {
@@ -61,7 +60,6 @@ $id_usuario = mysqli_fetch_assoc($query_user)['id'];
             border-top: 1px solid #dee2e6;
         }
 
-        /* Elemento que finge o código de barras no footer */
         .barcode-fake {
             font-family: 'Libre Barcode 39 Extended Text', 'Courier New', monospace;
             font-size: 24px;
@@ -70,7 +68,6 @@ $id_usuario = mysqli_fetch_assoc($query_user)['id'];
             color: #343a40;
         }
 
-        /* Marcador D'água para Usados / Cancelados */
         .stamp {
             position: absolute;
             top: 30%;
@@ -110,15 +107,13 @@ $id_usuario = mysqli_fetch_assoc($query_user)['id'];
                   INNER JOIN tipos_ingressos t ON i.id_tipo_ingresso = t.id
                   LEFT JOIN check_ins c ON c.id_inscricao = i.id
                   WHERE i.id_usuario = '$id_usuario'
-                  ORDER BY i.id DESC"; // Mostra do mais recente que ele comprou primeiro
-
+                  ORDER BY i.id DESC";
             $resultado_ingressos = mysqli_query($conexao, $sql);
 
             if (mysqli_num_rows($resultado_ingressos) > 0) {
-                // TEM INGRESSOS! Vamos desenhá-los!
                 while ($ingresso = mysqli_fetch_assoc($resultado_ingressos)) {
-                    $status = $ingresso['status_inscricao']; // 'paga', 'pendente', 'cancelada'
-                    $checkin = $ingresso['feito_checkin']; // Traz Horario se sim, ou null se não bateu porta
+                    $status = $ingresso['status_inscricao'];
+                    $checkin = $ingresso['feito_checkin'];
             ?>
                     <div class="col-md-6 col-lg-4">
                         <div class="ticket-card h-100 d-flex flex-column shadow-sm">
