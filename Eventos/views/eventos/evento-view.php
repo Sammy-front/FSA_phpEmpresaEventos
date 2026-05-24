@@ -1,71 +1,118 @@
+
+
+
 <?php
 session_start();
-
 require __DIR__ . '/../../config/conexao.php';
 
-
 if (!isset($_SESSION['usuario'])) {
-  header('Location: ../auth/login.php');
-  exit;
+    header('Location: ../auth/login.php');
+    exit;
 }
 ?>
 <!doctype html>
 <html lang="pt-br">
-  <head>
+<head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Usuário - Visualizar</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  </head>
-  <body>
+    <title>Painel Administrativo - Eventos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        .accordion-icon { transition: transform 0.3s ease; }
+        tr[aria-expanded="true"] .accordion-icon { transform: rotate(180deg); }
+        .main-row:hover { background-color: #f8f9fa; cursor: pointer; }
+    </style>
+</head>
+<body class="bg-light">
     <?php include('../layouts/navbar.php'); ?>
-    <div class="container mt-5">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-header">
-              <h4>Visualizar usuário
-                <a href="../../public/dashboard.php" class="btn btn-danger float-end">Voltar</a>
-              </h4>
-            </div>
-            <div class="card-body">
-                <?php
-              if (isset($_GET['id'])) {
-                  $usuario_id = mysqli_real_escape_string($conexao, $_GET['id']);
-                  $sql = "SELECT * FROM login WHERE id='$usuario_id'";
-                  $query = mysqli_query($conexao, $sql);
-                if (mysqli_num_rows($query) > 0) {
-                  $usuario = mysqli_fetch_array($query);
-                ?>
-                <div class="mb-3">
-                  <label>Nome</label>
-                  <p class="form-control">
-                    <?=$usuario['nome'];?>
-                  </p>
-                </div>
-                <div class="mb-3">
-                  <label>Email</label>
-                  <p class="form-control">
-                    <?=$usuario['email'];?>
-                  </p>
-                </div>
-                <div class="mb-3">
-                  <label>Data Nascimento</label>
-                  <p class="form-control">
-                    <?=date('d/m/Y', strtotime($usuario['data_nascimento']));?>
-                  </p>
-                </div>
-                <?php
-                } else {
-                  echo "<h5>Usuário não encontrado</h5>";
-                }
-              }
-              ?>
-            </div>
-          </div>
+    
+    <div class="container mt-4">
+        <?php include('../layouts/mensagem.php'); ?>
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4>Olá, <?= htmlspecialchars($_SESSION['nome']); ?>! <span class="badge bg-dark fs-6">Administrador</span></h4>
+            <a href="evento-create.php" class="btn btn-primary shadow-sm"><i class="bi bi-plus-circle"></i> Adicionar Evento</a>
         </div>
-      </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-dark text-white p-3">
+                <h5 class="mb-0">Gerenciar Eventos Cadastrados</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Nome do Evento</th>
+                                <th>Local</th>
+                                <th>Data</th>
+                                <th>Status</th>
+                                <th class="text-center pe-4">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $sql = "SELECT * FROM eventos ORDER BY id DESC";
+                            $result = mysqli_query($conexao, $sql);
+                            
+                            while($evento = mysqli_fetch_assoc($result)) {
+                                $collapseId = "collapseAdm" . $evento['id'];
+                                $corStatus = ($evento['status_evento'] == 'fechado') ? 'bg-danger' : 'bg-success';
+                            ?>
+                            
+                            <!-- LINHA PRINCIPAL -->
+                            <tr class="main-row" data-bs-toggle="collapse" data-bs-target="#<?=$collapseId?>">
+                                <td class="ps-4 fw-bold text-primary"><?=$evento['nome']?></td>
+                                <td><?=$evento['localidade']?></td>
+                                <td><?=date('d/m/Y', strtotime($evento['data_evento']))?></td>
+                                <td><span class="badge <?=$corStatus?> text-capitalize"><?=$evento['status_evento']?></span></td>
+                                <td class="text-center pe-4">
+                                    <i class="bi bi-chevron-down accordion-icon text-secondary"></i>
+                                </td>
+                            </tr>
+                            
+                            <!-- DETALHES E BOTÕES -->
+                            <tr>
+                                <td colspan="5" class="p-0 border-0">
+                                    <div class="collapse" id="<?=$collapseId?>">
+                                        <div class="card card-body m-3 shadow-sm border-start border-primary border-4 bg-white">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-8">
+                                                    <h6 class="text-uppercase text-muted fw-bold small mb-2">Descrição e Info</h6>
+                                                    <p class="mb-2 text-dark small"><?=$evento['descricao']?></p>
+                                                    <div class="d-flex gap-3 small text-muted">
+                                                        <span><i class="bi bi-clock"></i> <?=$evento['horario']?></span>
+                                                        <span><i class="bi bi-people"></i> <?=$evento['capacidade']?> vagas</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 d-flex gap-2 justify-content-end">
+                                                    <!-- BOTÃO EDITAR -->
+                                                    <a href="evento-edit.php?id=<?=$evento['id']?>" class="btn btn-warning">
+                                                        <i class="bi bi-pencil"></i> Editar
+                                                    </a>
+                                                    
+                                                    <!-- BOTÃO EXCLUIR -->
+                                                    <form action="../../controllers/eventoControllers.php" method="POST">
+                                                        <button type="submit" name="delete_evento" value="<?=$evento['id']?>" 
+                                                                class="btn btn-danger" 
+                                                                onclick="return confirm('⚠️ TEM CERTEZA?\nIsso apagará o evento permanentemente!')">
+                                                            <i class="bi bi-trash"></i> Excluir
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
+

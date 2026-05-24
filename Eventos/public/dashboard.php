@@ -1,6 +1,5 @@
 <?php
 session_start();
-// O código impede que entrem na página de eventos sem login!
 if (!isset($_SESSION['usuario'])) {
     $_SESSION['mensagem'] = "Por favor, faça login para acessar a área de eventos.";
     header('Location: ../views/auth/login.php');
@@ -8,7 +7,6 @@ if (!isset($_SESSION['usuario'])) {
 }
 
 require __DIR__ . '/../config/conexao.php';
-
 ?>
 <!doctype html>
 <html lang="pt-br">
@@ -25,7 +23,6 @@ require __DIR__ . '/../config/conexao.php';
     <div class="container mt-4">
       <?php include('../views/layouts/mensagem.php'); ?>
       
-      <!-- Informações do Usuário Logado -->
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h4>Olá, <?= $_SESSION['nome']; ?>! <span class="badge bg-secondary fs-6">Administrador</span></h4>
         <a href='../logout.php' class="btn btn-outline-danger">Sair da Conta</a>
@@ -64,7 +61,8 @@ require __DIR__ . '/../config/conexao.php';
                     <td><?=date('d/m/Y', strtotime($evento['data_evento']))?></td>
                     <td><?=$evento['capacidade']?> pessoas</td>
                     <td>
-                      <a href="../views/eventos/evento-view.php?id=<?=$evento['id']?>" class="btn btn-secondary btn-sm"><span class="bi-eye-fill"></span>&nbsp;Ver</a>
+                      <!-- CORRIGIDO: Link 'Ver' não envia mais ID desnecessário que causava falha visual -->
+                      <a href="../views/eventos/evento-view.php" class="btn btn-secondary btn-sm"><span class="bi-eye-fill"></span>&nbsp;Ver Gestão Completa</a>
                       <a href="../views/eventos/evento-edit.php?id=<?=$evento['id']?>" class="btn btn-success btn-sm"><span class="bi-pencil-fill"></span>&nbsp;Editar</a>
                       <form action="../controllers/eventoControllers.php" method="POST" class="d-inline">
                         <button onclick="return confirm('Tem certeza que deseja excluir o evento <?=$evento['nome']?>?')" type="submit" name="delete_evento" value="<?=$evento['id']?>" class="btn btn-danger btn-sm">
@@ -86,7 +84,6 @@ require __DIR__ . '/../config/conexao.php';
         </div>
       </div>
     </div>
-    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
