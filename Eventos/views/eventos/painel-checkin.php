@@ -20,46 +20,102 @@ require __DIR__ . '/../../config/conexao.php';
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
   <style>
-    .scanner-box {
-      border: 2px dashed #0d6efd;
-      background-color: #f8f9fa;
+    body {
+      background-color: #eef2f5;
+      color: #333;
     }
-
-    .bg-tabela-destaque {
-      background-color: #f1f4f8;
+    .scanner-card {
+      border: none;
+      border-radius: 1rem;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+      background: #ffffff;
+      border-top: 4px solid #ffc107;
     }
-
+    .custom-input {
+      background-color: #f4f6f9;
+      border: 1px solid #dee2e6;
+      border-radius: 0.6rem;
+      padding: 0.75rem 1rem;
+      transition: all 0.3s;
+      color: #212529;
+      font-weight: 500;
+    }
+    .custom-input:focus {
+      background-color: #ffffff;
+      border-color: #ffc107;
+      box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.2);
+      outline: none;
+    }
+    .section-badge {
+      display: inline-block;
+      background: #16191c;
+      color: #ffc107;
+      padding: 0.5rem 1.2rem;
+      border-radius: 50rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+    .accordion-item {
+      border: none;
+      border-radius: 0.75rem !important;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      margin-bottom: 0.75rem;
+    }
+    .accordion-button {
+      font-weight: 700;
+      color: #212529;
+      padding: 1.2rem 1.5rem;
+    }
     .accordion-button:not(.collapsed) {
-      background-color: #e9ecef;
-      color: #000;
+      background-color: #16191c;
+      color: #ffc107;
       box-shadow: none;
     }
-
+    .accordion-button:not(.collapsed) .bi-star-fill {
+      color: #ffc107 !important;
+    }
+    .accordion-button:not(.collapsed) .text-muted {
+      color: rgba(255, 255, 255, 0.6) !important;
+    }
+    .bg-tabela-destaque {
+      background-color: #f8f9fa;
+    }
+    .table-custom th {
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+    }
     .status-check {
-      min-width: 130px;
+      min-width: 140px;
       text-align: center;
     }
   </style>
 </head>
 
-<body class="bg-light">
+<body class="bg-light pb-5">
 
   <?php include('../layouts/navbar.php'); ?>
 
-  <div class="container mt-5 mb-5">
+  <div class="container mt-5">
     <?php include('../layouts/mensagem.php'); ?>
 
     <div class="row justify-content-center mb-5">
-      <div class="col-md-7">
-        <div class="card shadow-sm text-center scanner-box p-4 rounded-4">
-          <h4 class="text-primary fw-bold mb-3">
-            <i class="bi bi-upc-scan fs-2 align-middle text-danger me-2"></i> Simulador de Leitura (Catraca)
+      <div class="col-md-8">
+        <div class="scanner-card text-center p-4 p-md-5">
+          <h4 class="text-dark fw-bold mb-2">
+            <i class="bi bi-upc-scan fs-1 align-middle text-warning me-2"></i> Portaria e Check-in Digital
           </h4>
-          <p class="text-muted small">Passe a leitora no código do ingresso impresso (ID da Inscrição)</p>
+          <p class="text-muted mb-4">Insira o código numérico do ingresso ou escaneie o código de barras.</p>
 
-          <form action="/FSA/FSA_phpEmpresaEventos/Eventos/controllers/checkinControllers.php" method="POST" class="d-flex justify-content-center align-items-center">
-            <input type="number" name="id_inscricao" class="form-control form-control-lg w-50 border-dark text-center shadow-sm" placeholder="ID. Ex: 105" required autofocus>
-            <button type="submit" name="realizar_checkin" class="btn btn-primary btn-lg ms-3 shadow-sm px-4">
+          <form action="/FSA/FSA_phpEmpresaEventos/Eventos/controllers/checkinControllers.php" method="POST" class="d-flex justify-content-center align-items-center gap-2">
+            <input type="number" name="id_inscricao" class="custom-input w-50 text-center fw-bold fs-5" placeholder="Nº do Ingresso. Ex: 101" required autofocus>
+            <button type="submit" name="realizar_checkin" class="btn btn-warning btn-lg fw-bold px-4 rounded-3 text-dark shadow-sm">
               <i class="bi bi-check-circle-fill me-1"></i> Autorizar Entrada
             </button>
           </form>
@@ -67,14 +123,9 @@ require __DIR__ . '/../../config/conexao.php';
       </div>
     </div>
 
+    <div class="section-badge"><i class="bi bi-calendar2-check-fill me-2"></i>Relação de Eventos e Participantes</div>
 
-    <div class="d-flex align-items-center border-bottom pb-2 mb-3">
-      <i class="bi bi-calendar2-check text-dark fs-3 me-3"></i>
-      <h3 class="mb-0 text-dark fw-bold">Eventos Programados - Lista de Convidados</h3>
-    </div>
-
-    <div class="accordion shadow-sm border-0" id="accordionFestasList">
-
+    <div class="accordion border-0" id="accordionFestasList">
       <?php
       $queryEventos = mysqli_query($conexao, "SELECT id, nome, data_evento FROM eventos ORDER BY data_evento DESC");
 
@@ -85,44 +136,44 @@ require __DIR__ . '/../../config/conexao.php';
           $idFesta = $evento['id'];
           $nomeFesta = htmlspecialchars($evento['nome']);
           $data_eventoFormat = date('d/m/Y', strtotime($evento['data_evento']));
-          $countVendidos = mysqli_query($conexao, "SELECT COUNT(id) AS qtd FROM inscricoes WHERE id_evento='$idFesta'");
+          $countVendidos = mysqli_query($conexao, "SELECT COUNT(id) AS qtd FROM inscricoes WHERE id_evento='$idFesta' AND status_inscricao != 'cancelada'");
           $totalInscritos = mysqli_fetch_assoc($countVendidos)['qtd'];
       ?>
 
-          <div class="accordion-item border-bottom">
+          <div class="accordion-item">
             <h2 class="accordion-header" id="heading_<?= $counter ?>">
-              <button class="accordion-button collapsed fw-bold fs-6 py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_<?= $counter ?>" aria-expanded="false" aria-controls="collapse_<?= $counter ?>">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_<?= $counter ?>" aria-expanded="false" aria-controls="collapse_<?= $counter ?>">
 
                 <i class="bi bi-star-fill text-warning me-3"></i> <?= $nomeFesta ?>
-                <span class="ms-3 fw-normal text-muted fst-italic fs-6 border-start ps-3"> Agendado para: <?= $data_eventoFormat ?></span>
+                <span class="ms-3 fw-normal text-muted fst-italic fs-6 border-start ps-3">Data: <?= $data_eventoFormat ?></span>
 
                 <?php if ($totalInscritos > 0): ?>
                   <span class="badge rounded-pill bg-success ms-auto">+<?= $totalInscritos ?> Inscritos</span>
                 <?php else: ?>
-                  <span class="badge rounded-pill bg-secondary ms-auto">Nenhuma Venda Registrada</span>
+                  <span class="badge rounded-pill bg-secondary ms-auto">Nenhuma Inscrição</span>
                 <?php endif; ?>
 
               </button>
             </h2>
 
-            <div id="collapse_<?= $counter ?>" class="accordion-collapse collapse bg-light" aria-labelledby="heading_<?= $counter ?>" data-bs-parent="#accordionFestasList">
-              <div class="accordion-body p-4">
+            <div id="collapse_<?= $counter ?>" class="accordion-collapse collapse" aria-labelledby="heading_<?= $counter ?>" data-bs-parent="#accordionFestasList">
+              <div class="accordion-body p-4 bg-white">
 
                 <?php if ($totalInscritos == 0): ?>
-                  <div class="alert alert-secondary d-flex align-items-center mb-0" role="alert">
-                    <i class="bi bi-info-circle-fill fs-3 me-3 text-secondary"></i>
-                    <div>Ainda não existem participantes confirmados (inscrições/compras efetuadas) para este evento específico. Fique atento às futuras vendas.</div>
+                  <div class="alert alert-secondary d-flex align-items-center mb-0 rounded-3 border-0 bg-light" role="alert">
+                    <i class="bi bi-info-circle-fill fs-4 me-3 text-secondary"></i>
+                    <div class="small fw-semibold text-secondary">Ainda não existem participantes confirmados para este evento. As opções de portaria estarão disponíveis assim que houverem ingressos vendidos.</div>
                   </div>
                 <?php else: ?>
-                  <div class="table-responsive bg-white rounded shadow-sm border">
-                    <table class="table table-hover text-center align-middle mb-0">
-                      <thead class="table-dark">
+                  <div class="table-responsive bg-white rounded-3 border">
+                    <table class="table table-hover text-center align-middle mb-0 table-custom">
+                      <thead class="table-dark text-white border-bottom">
                         <tr>
-                          <th>Nº Ticket</th>
-                          <th>Visitante (Convidado)</th>
-                          <th>Pagamento DB</th>
-                          <th class="status-check">Status Entrada</th>
-                          <th>Operação Portaria</th>
+                          <th class="ps-4">Nº Ticket</th>
+                          <th>Visitante Convidado</th>
+                          <th>Situação Financeira</th>
+                          <th class="status-check">Status Catraca</th>
+                          <th class="pe-4" width="25%">Ação Portaria</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -147,44 +198,52 @@ require __DIR__ . '/../../config/conexao.php';
                         ?>
                           <tr class="<?= $fezCheckin ? 'bg-tabela-destaque' : '' ?>">
 
-                            <td class="fw-bold text-dark fs-5">
+                            <!-- ID do Ticket -->
+                            <td class="fw-bold text-dark fs-5 ps-3">
                               <span class="border rounded px-2 bg-light shadow-sm">#<?= $participante['id_ingresso'] ?></span>
                             </td>
 
+                            <!-- Nome -->
                             <td class="text-start fw-semibold p-3 text-dark">
                               <i class="bi bi-person-badge text-secondary me-2"></i> <?= htmlspecialchars($participante['nome_participante']) ?>
                             </td>
 
+                            <!-- Situação -->
                             <td>
                               <?php if ($participante['status_inscricao'] === 'cancelada'): ?>
-                                <span class="badge bg-danger">Reembolsado/Cancelado</span>
+                                <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger border border-danger px-3">Cancelado / Reembolsado</span>
                               <?php else: ?>
-                                <span class="badge bg-success px-3">Autorizado</span>
+                                <span class="badge rounded-pill bg-success bg-opacity-10 text-success border border-success px-3">Aprovado (Pago)</span>
                               <?php endif; ?>
                             </td>
 
+                            <!-- Status Catraca -->
                             <td class="status-check bg-light border-end border-start">
                               <?php if ($fezCheckin): ?>
-                                <i class="bi bi-door-open-fill text-success fs-4 d-block mt-2"></i>
-                                <span class="text-success fw-bold d-block mt-1">Check-in OK!</span>
-                                <small class="badge bg-success-subtle text-success-emphasis border border-success mt-1">
+                                <span class="badge rounded-pill bg-success bg-opacity-10 text-success border border-success px-3 d-inline-block">
+                                  <i class="bi bi-door-open-fill me-1"></i>Entrou
+                                </span>
+                                <small class="text-muted d-block mt-1" style="font-size:0.75rem;">
                                   <?= date('H:i \h\s', strtotime($participante['data_entrada'])) ?>
                                 </small>
                               <?php else: ?>
-                                <span class="text-muted d-block mt-3"><i class="bi bi-dash-circle"></i> Fora do Evento</span>
+                                <span class="badge rounded-pill bg-secondary bg-opacity-10 text-secondary border border-secondary px-3">
+                                  <i class="bi bi-dash-circle me-1"></i>Fora
+                                </span>
                               <?php endif; ?>
                             </td>
 
-                            <td style="width: 250px;">
+                            <!-- Ações -->
+                            <td class="pe-4">
                               <?php if ($participante['status_inscricao'] === 'cancelada'): ?>
 
-                                <button disabled class="btn btn-secondary btn-sm px-4 opacity-50"><i class="bi bi-ban"></i> Ticket Inválido</button>
+                                <button disabled class="btn btn-secondary btn-sm rounded-pill px-4 opacity-50"><i class="bi bi-ban"></i> Ticket Inválido</button>
 
                               <?php elseif (!$fezCheckin): ?>
 
                                 <form action="/FSA/FSA_phpEmpresaEventos/Eventos/controllers/checkinControllers.php" method="POST" class="d-inline">
                                   <input type="hidden" name="id_inscricao" value="<?= $participante['id_ingresso'] ?>">
-                                  <button type="submit" name="realizar_checkin" class="btn btn-success btn-sm px-3 shadow-sm rounded-pill fw-bold">
+                                  <button type="submit" name="realizar_checkin" class="btn btn-success btn-sm px-4 shadow-sm rounded-pill fw-bold">
                                     <i class="bi bi-upc-scan me-1"></i> Confirmar Entrada
                                   </button>
                                 </form>
@@ -193,7 +252,7 @@ require __DIR__ . '/../../config/conexao.php';
 
                                 <form action="/FSA/FSA_phpEmpresaEventos/Eventos/controllers/checkinControllers.php" method="POST" class="d-inline">
                                   <input type="hidden" name="desfazer_checkin" value="<?= $participante['id_checkin_realizado'] ?>">
-                                  <button type="submit" name="desfazer_checkin" onclick="return confirm('ATENÇÃO ADMINISTRADOR:\nDeseja cancelar o Check-In deste ingresso? A pulseira de entrada deverá ser removida, pois ele será considerado fora da festa!')" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                                  <button type="submit" name="desfazer_checkin" onclick="return confirm('ATENÇÃO PORTARIA:\nDeseja realmente cancelar o Check-In deste participante? Ele precisará ter seu acesso validado novamente para entrar.')" class="btn btn-outline-danger btn-sm rounded-pill px-3 shadow-sm">
                                     <i class="bi bi-arrow-counterclockwise"></i> Desfazer Leitura
                                   </button>
                                 </form>
@@ -216,7 +275,7 @@ require __DIR__ . '/../../config/conexao.php';
           $counter++;
         }
       } else {
-        echo '"<div class="text-center py-5 my-4 bg-white border border-light shadow-sm rounded-4"><i class="bi bi-clipboard-x fs-1 text-muted d-block mb-3"></i><h4 class="text-muted fw-light">Sua grade de Eventos e Projetos está zerada!</h4><p class="text-secondary mb-0">Adicione um novo Evento no painel Principal Administrador antes de gerir uma portaria ou lista física.</p></div>"';
+        echo '<div class="text-center py-5 my-4 bg-white border border-light shadow-sm rounded-4"><i class="bi bi-clipboard-x fs-1 text-muted d-block mb-3"></i><h4 class="text-muted fw-light">Sua grade de Eventos está vazia!</h4><p class="text-secondary mb-0">Adicione um novo Evento no painel administrativo principal antes de gerenciar a portaria.</p></div>';
       }
       ?>
 

@@ -2,13 +2,19 @@
 session_start();
 require __DIR__ . '/../config/conexao.php';
 
-// CRIAR USUÁRIO
-
+// 1. CRIAR USUÁRIO (Cadastro Público)
 if (isset($_POST['create_usuario'])) {
 	$nome = mysqli_real_escape_string($conexao, trim($_POST['nome']));
 	$email = mysqli_real_escape_string($conexao, trim($_POST['email']));
 	$data_nascimento = mysqli_real_escape_string($conexao, trim($_POST['data_nascimento']));
 	$senha = isset($_POST['senha']) ? mysqli_real_escape_string($conexao, password_hash(trim($_POST['senha']), PASSWORD_DEFAULT)) : '';
+    $verifica_email = mysqli_query($conexao, "SELECT id FROM usuarios WHERE email = '$email' LIMIT 1");
+    
+    if (mysqli_num_rows($verifica_email) > 0) {
+        $_SESSION['mensagem'] = "⚠️ O endereço de e-mail <strong>$email</strong> já está cadastrado no sistema.";
+        header('Location: ../views/auth/register.php');
+        exit;
+    }
 
 	$sql = "INSERT INTO usuarios (nome, email, data_nascimento, senha) VALUES ('$nome', '$email', '$data_nascimento', '$senha')";
 	mysqli_query($conexao, $sql);
@@ -19,13 +25,12 @@ if (isset($_POST['create_usuario'])) {
 		exit;
 	} else {
 		$_SESSION['mensagem'] = 'Falha ao processar cadastro no banco!';
-		header('Location: ../public/index.php');
+		header('Location: ../views/auth/register.php');
 		exit;
 	}
 }
 
-// UPDATE PELO ADM
-
+// 2. UPDATE PELO ADM
 if (isset($_POST['update_usuario'])) {
 	$usuario_id = mysqli_real_escape_string($conexao, $_POST['usuario_id']);
 	$nome = mysqli_real_escape_string($conexao, trim($_POST['nome']));
@@ -33,6 +38,13 @@ if (isset($_POST['update_usuario'])) {
 	$data_nascimento = mysqli_real_escape_string($conexao, trim($_POST['data_nascimento']));
 	$senha = trim($_POST['senha']);
 	$cargo = mysqli_real_escape_string($conexao, trim($_POST['cargo']));
+
+    $verifica_email = mysqli_query($conexao, "SELECT id FROM usuarios WHERE email = '$email' AND id != '$usuario_id' LIMIT 1");
+    if (mysqli_num_rows($verifica_email) > 0) {
+        $_SESSION['mensagem'] = "⚠️ Erro: O e-mail <strong>$email</strong> já está sendo usado por outro usuário.";
+        header("Location: ../views/usuarios_list/usuario_edit.php?id=$usuario_id");
+        exit;
+    }
 
 	$sql = "UPDATE usuarios SET nome = '$nome', email = '$email', data_nascimento = '$data_nascimento', cargo = '$cargo'";
 
@@ -52,9 +64,7 @@ if (isset($_POST['update_usuario'])) {
 	exit;
 }
 
-
-
-// DELETE
+// 3. DELETE (Excluir Conta)
 if (isset($_POST['delete_usuario'])) {
 	$usuario_id = mysqli_real_escape_string($conexao, $_POST['delete_usuario']);
 	$sql = "DELETE FROM usuarios WHERE id = '$usuario_id'";
@@ -69,15 +79,24 @@ if (isset($_POST['delete_usuario'])) {
 	exit;
 }
 
-// UPDATE PELO USER
+// UPDATE PELO USER 
 if (isset($_POST['atualizar_minha_conta'])) {
 	$sessao_email = mysqli_real_escape_string($conexao, $_SESSION['usuario']);
 	$resultado_busca = mysqli_query($conexao, "SELECT id FROM usuarios WHERE email = '$sessao_email' LIMIT 1");
 	$usuario_id = mysqli_fetch_assoc($resultado_busca)['id'];
-	$novo_nome = mysqli_real_escape_string($conexao, trim($_POST['nome']));
+    $novo_nome = mysqli_real_escape_string($conexao, trim($_POST['nome']));
 	$novo_email = mysqli_real_escape_string($conexao, trim($_POST['email']));
 	$nova_data_nascimento = mysqli_real_escape_string($conexao, trim($_POST['data_nascimento']));
 	$nova_senha = trim($_POST['senha']);
+
+    $verifica_email = mysqli_query($conexao, "SELECT id FROM usuarios WHERE email = '$novo_email' AND id != '$usuario_id' LIMIT 1");
+    if (mysqli_num_rows($verifica_email) > 0) {
+        $_SESSION['mensagem'] = "⚠️ Erro: O e-mail <strong>$novo_email</strong> já está sendo usado por outra conta.";
+        $pagina_anterior = $_SERVER['HTTP_REFERER'];
+        header("Location: $pagina_anterior");
+        exit;
+    }
+
 	$sql_update = "UPDATE usuarios SET nome = '$novo_nome', email = '$novo_email', data_nascimento = '$nova_data_nascimento'";
 
 	if (!empty($nova_senha)) {
@@ -100,3 +119,4 @@ if (isset($_POST['atualizar_minha_conta'])) {
 	header("Location: $pagina_anterior");
 	exit;
 }
+?>

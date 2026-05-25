@@ -1,5 +1,4 @@
 <?php
-// Tenta buscar informações extras caso a pessoa atualize a si mesma na base
 require __DIR__ . '/../../config/conexao.php';
 $modalUser = [];
 if (isset($_SESSION['usuario'])) {
@@ -11,7 +10,6 @@ if (isset($_SESSION['usuario'])) {
 }
 ?>
 
-<!-- NAVBAR GLOBAL E ELEGANTE -->
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm sticky-top" style="background: rgba(22, 25, 28, 0.95); backdrop-filter: blur(10px); border-bottom: 2px solid #ffc107;">
     <div class="container-md py-1">
 
@@ -53,17 +51,14 @@ if (isset($_SESSION['usuario'])) {
 
             </ul>
 
-            <!-- IDENTIDADE / CONTA -->
             <div class="d-flex align-items-center mt-3 mt-lg-0 gap-3 border-start border-secondary ps-lg-4 ms-lg-2 pt-3 pt-lg-0">
                 <?php if (isset($_SESSION['usuario'])): ?>
 
-                    <!-- Disparador da Modal -->
                     <button class="btn btn-dark rounded-pill px-4 d-flex align-items-center gap-2 border border-warning shadow-sm user-badge transition" type="button" data-bs-toggle="modal" data-bs-target="#modalMinhaConta">
                         <i class="bi bi-person-circle fs-5 text-warning"></i>
                         <span class="text-light fw-semibold text-truncate" style="max-width: 150px;"><?= $_SESSION['nome'] ?></span>
                     </button>
 
-                    <!-- Desconectar -->
                     <a href="/FSA/FSA_phpEmpresaEventos/Eventos/logout.php" title="Sair do Sistema" class="btn btn-outline-danger border-0 rounded-circle p-2 px-3 shadow-sm d-flex align-items-center justify-content-center transition"><i class="bi bi-power fs-5"></i></a>
                 <?php endif; ?>
             </div>
@@ -71,7 +66,6 @@ if (isset($_SESSION['usuario'])) {
     </div>
 </nav>
 
-<!-- MODAL MINHA CONTA INTEGRADORA -->
 <?php if (isset($_SESSION['usuario'])): ?>
     <div class="modal fade" id="modalMinhaConta" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -87,16 +81,15 @@ if (isset($_SESSION['usuario'])) {
                 <form method="POST" action="/FSA/FSA_phpEmpresaEventos/Eventos/controllers/usuarioControllers.php">
                     <div class="modal-body px-4 py-4 bg-light">
 
-                        <!-- Campos Preenchidos com Lógica Bootstrap 'form-floating' -->
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control fw-bold text-dark shadow-sm" id="u_nome" name="nome" placeholder="..." value="<?= htmlspecialchars($modalUser['nome']) ?>" required>
-                            <label for="u_nome" class="text-secondary"><i class="bi bi-person"></i> Nome do Portador</label>
+                            <label for="u_nome" class="text-secondary"><i class="bi bi-person"></i>Nome</label>
                         </div>
 
                         <div class="row g-2 mb-3">
                             <div class="col-md-6 form-floating">
                                 <input type="date" class="form-control shadow-sm" id="u_data" name="data_nascimento" value="<?= htmlspecialchars($modalUser['data_nascimento']) ?>" required>
-                                <label for="u_data" class="ms-2 text-secondary">Nascimento</label>
+                                <label for="u_data" class="ms-2 text-secondary">Data de Nascimento</label>
                             </div>
 
                             <div class="col-md-6 form-floating">
@@ -107,24 +100,23 @@ if (isset($_SESSION['usuario'])) {
 
                         <div class="form-floating mb-4">
                             <input type="email" class="form-control shadow-sm" id="u_mail" name="email" placeholder="..." value="<?= htmlspecialchars($modalUser['email']) ?>" required>
-                            <label for="u_mail" class="text-secondary"><i class="bi bi-envelope"></i> E-mail (Seu Login)</label>
+                            <label for="u_mail" class="text-secondary"><i class="bi bi-envelope"></i>E-mail</label>
                         </div>
 
-                        <!-- Zona de Perigo -->
                         <div class="p-3 border rounded-3 bg-white shadow-sm mt-4">
-                            <label class="form-label fw-bold text-danger"><i class="bi bi-key-fill"></i> Substituir Credencial:</label>
+                            <label class="form-label fw-bold text-danger"><i class="bi bi-key-fill"></i>Trocar Senha:</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
                                 <input type="password" class="form-control" name="senha" placeholder="Digite apenas caso vá alterar sua senha">
                             </div>
-                            <small class="text-muted d-block mt-2" style="font-size:0.8rem">Ocultando ou Deixando em branco a criptografia original atual continuará ativa na DB.</small>
+                            <small class="text-muted d-block mt-2" style="font-size:0.8rem">Só será atualizada se você informar uma nova senha, sua senha estará segura.</small>
                         </div>
 
                     </div>
 
                     <div class="modal-footer bg-light px-4 pb-4 pt-0 border-0">
                         <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Manter como Está</button>
-                        <button type="submit" name="atualizar_minha_conta" class="btn btn-warning fw-bold px-4 rounded-pill shadow-sm text-dark"><i class="bi bi-database-check me-1"></i> Confirmar Saldo BD</button>
+                        <button type="submit" name="atualizar_minha_conta" class="btn btn-warning fw-bold px-4 rounded-pill shadow-sm text-dark"><i class="bi bi-database-check me-1"></i>Confirmar Alterações</button>
                     </div>
                 </form>
 
@@ -133,7 +125,6 @@ if (isset($_SESSION['usuario'])) {
     </div>
 <?php endif; ?>
 
-<!-- Estilos Auxiliares (Sinta a Mágica das classes Hover no Mouse!) -->
 <style>
     .btn-hover { transition: color 0.2s, background-color 0.2s; }
     .btn-hover:hover { color: #fff !important; background-color: rgba(255, 255, 255, 0.1); }

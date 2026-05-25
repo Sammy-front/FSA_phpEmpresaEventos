@@ -1,4 +1,5 @@
 <?php
+// Arquivo: views/ingressos/ingressos.php
 session_start();
 
 if (!isset($_SESSION['usuario'])) {
@@ -28,53 +29,102 @@ $id_usuario = mysqli_fetch_assoc($query_user)['id'];
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
+        body {
+            background-color: #eef2f5;
+            color: #333;
+        }
         .ticket-card {
             background: #fff;
-            border: 2px solid #e9ecef;
-            border-radius: 15px;
+            border: none;
+            border-radius: 1.25rem;
             position: relative;
             overflow: hidden;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
         }
-
         .ticket-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
         }
-
         .ticket-header {
-            background-color: #212529;
+            background: linear-gradient(135deg, #16191c 0%, #2c3136 100%);
             color: white;
-            padding: 15px;
-            border-bottom: 3px dashed #6c757d;
-        }
-
-        .ticket-body {
             padding: 20px;
+            position: relative;
+            border-bottom: 3px dashed #eef2f5;
         }
-
+        .ticket-header::before,
+        .ticket-header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            width: 20px;
+            height: 20px;
+            background-color: #eef2f5;
+            border-radius: 50%;
+            z-index: 10;
+        }
+        .ticket-header::before {
+            left: -10px;
+        }
+        .ticket-header::after {
+            right: -10px;
+        }
+        .ticket-body {
+            padding: 25px;
+        }
         .ticket-footer {
             background: #f8f9fa;
-            padding: 15px;
+            padding: 20px;
             text-align: center;
             border-top: 1px solid #dee2e6;
         }
-
         .barcode-fake {
-            font-family: 'Libre Barcode 39 Extended Text', 'Courier New', monospace;
-            font-size: 24px;
-            font-weight: bold;
-            letter-spacing: 5px;
-            color: #343a40;
+            font-family: monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: #212529;
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
         }
-
         .stamp {
             position: absolute;
-            top: 30%;
-            left: 10%;
-            transform: rotate(-15deg);
-            opacity: 0.2;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-12deg);
+            font-weight: 900;
+            font-size: 2.2rem;
+            letter-spacing: 2px;
+            border: 4px double;
+            padding: 5px 15px;
+            border-radius: 8px;
+            opacity: 0.15;
             pointer-events: none;
+        }
+        .stamp-utilized {
+            color: #198754;
+            border-color: #198754;
+        }
+        .stamp-cancelled {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+        .btn-gradient {
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            color: #000;
+            border: none;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: 0.3s;
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #ff9800 0%, #e68a00 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 152, 0, 0.4);
+            color: #000;
         }
     </style>
 </head>
@@ -85,9 +135,9 @@ $id_usuario = mysqli_fetch_assoc($query_user)['id'];
     <div class="container mt-4 mb-5">
         <?php include('../../views/layouts/mensagem.php'); ?>
 
-        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
-            <h2><i class="bi bi-wallet2 text-primary"></i> Meus Ingressos</h2>
-            <a href="../../public/dashUser.php" class="btn btn-outline-dark shadow-sm"><i class="bi bi-calendar2-event"></i> Explorar Novos Eventos</a>
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary border-opacity-25 pb-3">
+            <h2 class="fw-bold text-dark m-0"><i class="bi bi-wallet2 text-warning me-2"></i> Meus Ingressos</h2>
+            <a href="../../public/dashUser.php" class="btn btn-outline-dark shadow-sm rounded-pill fw-bold px-3"><i class="bi bi-calendar2-event me-1"></i> Explorar Novos Eventos</a>
         </div>
 
         <div class="row g-4">
@@ -119,7 +169,7 @@ $id_usuario = mysqli_fetch_assoc($query_user)['id'];
                         <div class="ticket-card h-100 d-flex flex-column shadow-sm">
 
                             <div class="ticket-header">
-                                <h5 class="m-0 text-uppercase text-truncate" title="<?= $ingresso['nome_evento'] ?>">
+                                <h5 class="m-0 text-uppercase text-truncate fw-bold" title="<?= $ingresso['nome_evento'] ?>">
                                     <?= $ingresso['nome_evento'] ?>
                                 </h5>
                             </div>
@@ -127,26 +177,26 @@ $id_usuario = mysqli_fetch_assoc($query_user)['id'];
                             <div class="ticket-body flex-grow-1 position-relative">
 
                                 <?php if ($status == 'cancelada'): ?>
-                                    <h1 class="text-danger stamp fw-bold display-4">CANCELADO</h1>
+                                    <div class="stamp stamp-cancelled">CANCELADO</div>
                                 <?php elseif (!empty($checkin)): ?>
-                                    <h1 class="text-success stamp fw-bold display-4">UTILIZADO</h1>
+                                    <div class="stamp stamp-utilized">UTILIZADO</div>
                                 <?php endif; ?>
 
                                 <p class="mb-1 text-muted small text-uppercase fw-bold"><i class="bi bi-tag-fill"></i> Categoria Adquirida:</p>
                                 <p class="fs-5 text-primary fw-bold"><?= $ingresso['setor_ingresso'] ?></p>
 
                                 <ul class="list-unstyled mb-0">
-                                    <li class="mb-2"><i class="bi bi-calendar3"></i> <b>Data:</b> <?= date('d/m/Y', strtotime($ingresso['data_evento'])) ?> às <?= $ingresso['horario'] ?></li>
-                                    <li class="mb-2"><i class="bi bi-geo-alt-fill"></i> <b>Local:</b> <?= $ingresso['localidade'] ?></li>
+                                    <li class="mb-2 text-dark"><i class="bi bi-calendar3 text-muted me-1"></i> <b>Data:</b> <?= date('d/m/Y', strtotime($ingresso['data_evento'])) ?> às <?= $ingresso['horario'] ?></li>
+                                    <li class="mb-2 text-dark"><i class="bi bi-geo-alt-fill text-danger me-1"></i> <b>Local:</b> <?= $ingresso['localidade'] ?></li>
 
                                     <li class="mt-4 pt-3 border-top">
                                         <b class="text-dark">Situação Financeira:</b>
                                         <?php if ($status == 'paga'): ?>
-                                            <span class="badge bg-success ms-1"><i class="bi bi-check-circle"></i> APROVADO</span>
+                                            <span class="badge rounded-pill bg-success bg-opacity-10 text-success border border-success px-3 ms-1"><i class="bi bi-check-circle"></i> APROVADO</span>
                                         <?php elseif ($status == 'cancelada'): ?>
-                                            <span class="badge bg-danger ms-1">Recusado/Cancelado</span>
+                                            <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger border border-danger px-3 ms-1">Cancelado</span>
                                         <?php else: ?>
-                                            <span class="badge bg-warning ms-1">Processando..</span>
+                                            <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning border border-warning px-3 ms-1">Processando..</span>
                                         <?php endif; ?>
                                     </li>
 
@@ -163,9 +213,10 @@ $id_usuario = mysqli_fetch_assoc($query_user)['id'];
                                 </ul>
                             </div>
 
+                            <!-- Rodapé do Bilhete com Identificação Serial -->
                             <div class="ticket-footer d-flex flex-column align-items-center">
                                 <small class="text-muted text-uppercase fw-bold mb-1">Apresente sua Identificação</small>
-                                <div class="barcode-fake user-select-all px-2 border border-dark rounded">#<?= str_pad($ingresso['numero_ingresso'], 6, '0', STR_PAD_LEFT); ?></div>
+                                <div class="barcode-fake user-select-all px-3 py-1">#<?= str_pad($ingresso['numero_ingresso'], 6, '0', STR_PAD_LEFT); ?></div>
                                 <small class="text-secondary mt-1">Data da compra: <?= date('d/m/y \- H:i', strtotime($ingresso['data_inscricao'])) ?></small>
                             </div>
                         </div>
@@ -175,11 +226,11 @@ $id_usuario = mysqli_fetch_assoc($query_user)['id'];
                 }
             } else {
                 ?>
-                <div class="col-12 mt-5 text-center p-5 bg-white shadow-sm border rounded">
-                    <i class="bi bi-ticket-perforated-fill text-muted mb-3 d-block" style="font-size: 4rem;"></i>
-                    <h4 class="text-dark fw-light">Sua carteira está vazia!</h4>
-                    <p class="text-muted">Você ainda não se inscreveu ou garantiu sua presença em nenhum evento do sistema.</p>
-                    <a href="../../public/dashUser.php" class="btn btn-primary mt-3 px-5 py-2">Explorar Festas / Palestras</a>
+                <div class="col-12 mt-5 text-center p-5 bg-white shadow border-0 rounded-4">
+                    <i class="bi bi-ticket-perforated-fill text-muted mb-3 d-block" style="font-size: 4.5rem;"></i>
+                    <h4 class="text-dark fw-bold mb-2">Sua carteira está vazia!</h4>
+                    <p class="text-muted mb-4">Você ainda não se inscreveu ou garantiu sua presença em nenhum evento do sistema.</p>
+                    <a href="../../public/dashUser.php" class="btn btn-gradient btn-lg px-5 py-3 rounded-pill shadow-sm"><i class="bi bi-compass-fill me-1"></i> Explorar Eventos</a>
                 </div>
             <?php } ?>
 

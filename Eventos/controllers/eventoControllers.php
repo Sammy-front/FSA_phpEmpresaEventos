@@ -84,8 +84,7 @@ if (isset($_POST['delete_evento'])) {
     } else {
         $_SESSION['mensagem'] = 'Não foi possível deletar o evento.';
     }
-
-    // Volta para a página exata que o usuário estava (Dashboard ou Evento-View)
+    
     if (isset($_SERVER['HTTP_REFERER'])) {
         header("Location: " . $_SERVER['HTTP_REFERER']);
     } else {
