@@ -1,1 +1,67 @@
-SELECT * FROM cdc_3b_grupo9.eventos;
+SELECT * FROM cdc_3b_grupo9;
+
+
+CREATE TABLE IF NOT EXISTS usuarios (
+id INT AUTO_INCREMENT PRIMARY KEY,
+nome VARCHAR(150) NOT NULL,
+email VARCHAR(100) NOT NULL UNIQUE,
+senha VARCHAR(255) NOT NULL,
+data_nascimento DATETIME NOT NULL,
+cargo ENUM('usuario', 'adm') NOT NULL DEFAULT 'usuario',
+criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE eventos (
+id INT AUTO_INCREMENT PRIMARY KEY,
+nome VARCHAR(250) NOT NULL,
+descricao TEXT,
+data_evento DATETIME NOT NULL,
+horario VARCHAR(250) not null,
+localidade VARCHAR(250),
+capacidade INT NOT NULL DEFAULT 0,
+status_evento ENUM('aberto', 'fechado') NOT NULL DEFAULT 'aberto',
+criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS tipos_ingressos (
+id INT AUTO_INCREMENT PRIMARY KEY,
+id_evento INT NOT NULL,
+nome_ingresso VARCHAR(100) NOT NULL,
+valor DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+FOREIGN KEY (id_evento) REFERENCES eventos(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS lotes (
+id INT AUTO_INCREMENT PRIMARY KEY,
+id_evento INT NOT NULL,
+nome_lote VARCHAR(50) NOT NULL,
+data_inicio DATETIME NOT NULL,
+data_fim DATETIME NOT NULL,
+
+FOREIGN KEY (id_evento) REFERENCES eventos(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS inscricoes (
+id INT AUTO_INCREMENT PRIMARY KEY,
+id_evento INT NOT NULL,
+id_usuario INT NOT NULL,
+id_tipo_ingresso INT NOT NULL,
+id_lote INT,
+status_inscricao ENUM('pendente', 'paga', 'cancelada') DEFAULT 'pendente',
+data_inscricao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+FOREIGN KEY (id_evento) REFERENCES eventos(id) ON DELETE CASCADE,
+FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE,
+FOREIGN KEY (id_tipo_ingresso) REFERENCES tipos_ingressos(id) ON DELETE RESTRICT,
+FOREIGN KEY (id_lote) REFERENCES lotes(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS check_ins (
+id INT AUTO_INCREMENT PRIMARY KEY,
+id_inscricao INT NOT NULL,
+data_entrada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+operador_porta VARCHAR(100),
+
+FOREIGN KEY (id_inscricao) REFERENCES inscricoes(id) ON DELETE RESTRICT
+);
