@@ -75,16 +75,18 @@ if (isset($_POST['update_evento'])) {
 // EXCLUIR EVENTO
 if (isset($_POST['delete_evento'])) {
     $evento_id = mysqli_real_escape_string($conexao, $_POST['delete_evento']);
+    $sql_checkins = "DELETE FROM check_ins WHERE id_inscricao IN (SELECT id FROM inscricoes WHERE id_evento = '$evento_id')";
+    mysqli_query($conexao, $sql_checkins);
 
-    $sql = "DELETE FROM eventos WHERE id = '$evento_id'";
-    mysqli_query($conexao, $sql);
+    $sql_evento = "DELETE FROM eventos WHERE id = '$evento_id'";
+    mysqli_query($conexao, $sql_evento);
 
     if (mysqli_affected_rows($conexao) > 0) {
-        $_SESSION['mensagem'] = 'Evento excluído permanentemente!';
+        $_SESSION['mensagem'] = 'Evento e seus registros vinculados foram excluídos com sucesso!';
     } else {
         $_SESSION['mensagem'] = 'Não foi possível deletar o evento.';
     }
-    
+
     if (isset($_SERVER['HTTP_REFERER'])) {
         header("Location: " . $_SERVER['HTTP_REFERER']);
     } else {
