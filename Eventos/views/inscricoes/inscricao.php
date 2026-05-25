@@ -112,7 +112,6 @@ if ($restantes < 0) $restantes = 0;
 
             <div class="col-md-5">
                 <div class="purchase-card">
-                    <img src="https://via.placeholder.com/600x200/16191c/FFF?text=<?php echo urlencode($evento['nome']); ?>" class="card-img-top" alt="...">
                     <div class="card-body mt-2 text-center p-4">
                         <h2 class="card-title text-uppercase fw-bold text-dark mb-3"><?= $evento['nome'] ?></h2>
                         <h6 class="text-secondary mb-4"><i class="bi bi-geo-alt-fill text-danger"></i> <?= htmlspecialchars($evento['localidade']) ?></h6>
@@ -169,7 +168,7 @@ if ($restantes < 0) $restantes = 0;
                         </div>
 
                         <div class="mb-4">
-                            <label for="qtd" class="form-label fw-bold text-dark mb-2"><i class="bi bi-123"></i> Quantidade de Convites <span class="text-danger">*</span></label>
+                            <label for="qtd" class="form-label fw-bold text-dark mb-2">Quantidade de Convites <span class="text-danger">*</span></label>
                             <input type="number" id="qtd" name="quantidade" class="custom-input w-100 text-center fw-bold fs-5 shadow-sm" value="1" min="1" max="<?= $restantes ?>" required <?= ($restantes == 0) ? 'disabled' : '' ?>>
                             <small class="text-muted d-block mt-2" style="font-size:0.8rem">Cada ingresso gerará um código individual e exclusivo na sua conta.</small>
                         </div>
